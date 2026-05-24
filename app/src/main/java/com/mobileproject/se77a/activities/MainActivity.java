@@ -1,4 +1,4 @@
 package com.mobileproject.se77a.activities;
 
-public class Dashboard {
+public class MainActivity {
 }
