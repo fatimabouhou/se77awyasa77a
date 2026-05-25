@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_gradient_bg">
+
+    <!-- Cercle décoratif fond haut droite -->
+    <View
+        android:id="@+id/bg_circle"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:background="@drawable/splash_cercle"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="-60dp"
+        android:layout_marginEnd="-60dp" />
+
+    <!-- Titre haut gauche -->
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Perfect\nHealthcare\nSolution"
+        android:textColor="@android:color/white"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        android:lineSpacingMultiplier="1.1"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="72dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/decorations_group"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Seringue + Pillules côte à côte en haut à droite -->
+    <LinearLayout
+        android:id="@+id/decorations_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="56dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/imgSyringe"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:src="@drawable/sering"
+            android:contentDescription="@null"
+            android:rotation="-30"
+            android:layout_marginEnd="8dp" />
+
+        <ImageView
+            android:id="@+id/imgPills"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:src="@drawable/pellule"
+            android:contentDescription="@null" />
+
+    </LinearLayout>
+
+    <!-- Médecin 3D centré -->
+    <ImageView
+        android:id="@+id/imgDoctor"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/doctor"
+        android:contentDescription="Médecin HealthTracker"
+        android:scaleType="fitCenter"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtTitle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

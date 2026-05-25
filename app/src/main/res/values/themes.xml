@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.Se77a" parent="Base.Theme.Se77a" />
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/splash_gradient_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
 </resources>

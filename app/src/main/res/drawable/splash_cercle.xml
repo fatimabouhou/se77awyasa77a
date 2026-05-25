@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    splash_circle.xml
+    Emplacement : res/drawable/splash_circle.xml
+
+    Cercle semi-transparent blanc utilisé comme décoration
+    en haut à droite du fond.
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <solid android:color="#30FFFFFF" />
+
+</shape>
