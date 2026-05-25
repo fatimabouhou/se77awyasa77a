@@ -10,109 +10,167 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
+        <!-- ===== HEADER ===== -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp">
+            android:layout_marginBottom="20dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_centerVertical="true">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bonjour 👋"
                     android:textColor="#64748B"
-                    android:textSize="14sp"
-                    android:fontFamily="sans-serif-medium"/>
+                    android:textSize="14sp"/>
                 <TextView
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fatima Bouhou"
                     android:textColor="#0F172A"
-                    android:textSize="24sp"
+                    android:textSize="22sp"
                     android:textStyle="bold"
-                    android:layout_marginTop="4dp"/>
+                    android:layout_marginTop="2dp"/>
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/btn_notification"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_alignParentRight="true"
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
+                app:cardCornerRadius="23dp"
+                app:cardElevation="4dp"
                 app:cardBackgroundColor="#FFFFFF">
                 <ImageView
-                    android:layout_width="26dp"
-                    android:layout_height="26dp"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
                     android:layout_gravity="center"
                     android:src="@drawable/notif"
                     android:scaleType="centerInside"/>
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
-        <FrameLayout
-            android:layout_width="240dp"
-            android:layout_height="240dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="40dp">
-
-            <ProgressBar
-                android:id="@+id/progress_health_score"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:indeterminate="false"
-                android:max="100"
-                android:progress="85"
-                android:progressDrawable="@drawable/circle_progress_bar" />
+        <!-- ===== CARD RUNNER — DARK NEON ===== -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_runner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="32dp"
+            app:cardElevation="20dp"
+            app:cardBackgroundColor="#0D1B2A">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:paddingTop="28dp"
+                android:paddingBottom="28dp"
+                android:paddingHorizontal="20dp">
 
+                <!-- Label haut -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SANTÉ GLOBALE"
+                    android:textColor="#4A90A4"
+                    android:textStyle="bold"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.25"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Cercle lumineux autour du runner -->
+                <FrameLayout
+                    android:layout_width="220dp"
+                    android:layout_height="220dp"
+                    android:layout_gravity="center">
+
+                    <!-- Cercle glow externe (le plus grand, le plus transparent) -->
+                    <View
+                        android:id="@+id/glow_outer"
+                        android:layout_width="220dp"
+                        android:layout_height="220dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_glow_outer"
+                        android:alpha="0.4"/>
+
+                    <!-- Cercle glow moyen -->
+                    <View
+                        android:id="@+id/glow_mid"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_glow_mid"
+                        android:alpha="0.6"/>
+
+                    <!-- Cercle glow interne -->
+                    <View
+                        android:id="@+id/glow_inner"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_glow_inner"
+                        android:alpha="0.85"/>
+
+                    <!-- Lottie Runner centré -->
+                    <com.airbnb.lottie.LottieAnimationView
+                        android:id="@+id/lottie_runner"
+                        android:layout_width="150dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        app:lottie_rawRes="@raw/runner"
+                        app:lottie_autoPlay="true"
+                        app:lottie_loop="true"/>
+
+                </FrameLayout>
+
+                <!-- Score -->
                 <TextView
                     android:id="@+id/tv_health_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="85"
-                    android:textColor="#0F172A"
+                    android:textColor="#FFFFFF"
                     android:textSize="64sp"
                     android:fontFamily="sans-serif-black"
-                    android:includeFontPadding="false"/>
+                    android:includeFontPadding="false"
+                    android:layout_marginTop="16dp"/>
 
+                <!-- Sous-score -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SANTÉ GLOBALE"
-                    android:textColor="#64748B"
-                    android:textStyle="bold"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.15"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="12dp"/>
+                    android:text="85 / 100"
+                    android:textColor="#4A90A4"
+                    android:textSize="13sp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="16dp"/>
 
+                <!-- Badge néon -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Excellent"
-                    android:textColor="#10B981"
-                    android:background="@drawable/bg_badge_success"
+                    android:textColor="#00D4FF"
+                    android:background="@drawable/bg_badge_neon"
                     android:textStyle="bold"
                     android:textSize="12sp"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="6dp"/>
-            </LinearLayout>
-        </FrameLayout>
+                    android:paddingHorizontal="20dp"
+                    android:paddingVertical="8dp"/>
 
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ===== RÉSUMÉ DU JOUR ===== -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -159,6 +217,7 @@
                     android:textSize="38sp"
                     android:fontFamily="sans-serif-black"
                     android:includeFontPadding="false"/>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -259,7 +318,7 @@
         <FrameLayout
             android:id="@+id/chart_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </ScrollView>
