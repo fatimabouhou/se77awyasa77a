@@ -95,6 +95,9 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
+                    android:textColor="@color/blue_dark_1"
+                    android:textColorHint="@color/gray_text"
+                    android:imeOptions="actionNext"
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Email -->
@@ -118,6 +121,9 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
+                    android:textColor="@color/blue_dark_1"
+                    android:textColorHint="@color/gray_text"
+                    android:imeOptions="actionNext"
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Password -->
@@ -141,6 +147,9 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
+                    android:textColor="@color/blue_dark_1"
+                    android:textColorHint="@color/gray_text"
+                    android:imeOptions="actionNext"
                     android:layout_marginBottom="16dp"/>
 
                 <!-- Confirm Password -->
@@ -164,6 +173,9 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp"
                     android:textSize="14sp"
+                    android:textColor="@color/blue_dark_1"
+                    android:textColorHint="@color/gray_text"
+                    android:imeOptions="actionDone"
                     android:layout_marginBottom="24dp"/>
 
                 <Button
