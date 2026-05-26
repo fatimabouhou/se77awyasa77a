@@ -1,8 +1,5 @@
 package com.mobileproject.se77a.fragments;
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,24 +13,21 @@ import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieProperty;
-import com.airbnb.lottie.model.KeyPath;
 import com.mobileproject.se77a.R;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class FragmentHome extends Fragment {
 
-    private TextView tvUsername, tvHealthScore, tvRdvCount, tvMedCount, tvOrdoCount;
+    private TextView tvUsername, tvDate, tvHealthScore;
+    private TextView tvSleepHours, tvStepsCount, tvWaterCount;
+    private TextView tvRdvCount, tvMedCount, tvOrdoCount;
+    private LinearLayout tvStatusBadge;  // ← C'est un LinearLayout, pas un TextView !
     private CardView btnNotification;
     private LinearLayout cardStatRdv, cardStatMed, cardStatOrdo;
-    private LottieAnimationView lottieRunner;
-    private View glowOuter, glowMid, glowInner;
-
-    private ValueAnimator colorAnimator;
-    private ValueAnimator glowAnimator;
-    private int healthScore = 25;
-
-    public FragmentHome() {}
+    private LinearLayout cardSleep, cardSteps, cardWater;
 
     @Nullable
     @Override
@@ -43,128 +37,97 @@ public class FragmentHome extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        tvUsername      = view.findViewById(R.id.tv_username);
-        tvHealthScore   = view.findViewById(R.id.tv_health_score);
-        tvRdvCount      = view.findViewById(R.id.tv_rdv_count);
-        tvMedCount      = view.findViewById(R.id.tv_med_count);
-        tvOrdoCount     = view.findViewById(R.id.tv_ordo_count);
+        // Header
+        tvUsername = view.findViewById(R.id.tv_username);
+        tvDate = view.findViewById(R.id.tv_date);
         btnNotification = view.findViewById(R.id.btn_notification);
-        cardStatRdv     = view.findViewById(R.id.card_stat_rdv);
-        cardStatMed     = view.findViewById(R.id.card_stat_med);
-        cardStatOrdo    = view.findViewById(R.id.card_stat_ordo);
-        lottieRunner    = view.findViewById(R.id.lottie_runner);
-        glowOuter       = view.findViewById(R.id.glow_outer);
-        glowMid         = view.findViewById(R.id.glow_mid);
-        glowInner       = view.findViewById(R.id.glow_inner);
 
-        tvHealthScore.setText(String.valueOf(healthScore));
+        // Carte santé dashboard
+        tvHealthScore = view.findViewById(R.id.tv_health_score);
+        tvStatusBadge = view.findViewById(R.id.tv_status_badge);  // ← LinearLayout
+        tvSleepHours = view.findViewById(R.id.tv_sleep_hours);
+        tvStepsCount = view.findViewById(R.id.tv_steps_count);
+        tvWaterCount = view.findViewById(R.id.tv_water_count);
 
-        lancerAnimationRunner(healthScore);
-        lancerAnimationGlow();
+        // Cartes stats résumé
+        cardStatRdv = view.findViewById(R.id.card_stat_rdv);
+        cardStatMed = view.findViewById(R.id.card_stat_med);
+        cardStatOrdo = view.findViewById(R.id.card_stat_ordo);
 
-        btnNotification.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Notifications", Toast.LENGTH_SHORT).show());
-        cardStatRdv.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Détails RDV", Toast.LENGTH_SHORT).show());
-        cardStatMed.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Détails Médicaments", Toast.LENGTH_SHORT).show());
-        cardStatOrdo.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Détails Ordonnances", Toast.LENGTH_SHORT).show());
+        // Les TextView à l'intérieur des cartes
+        tvRdvCount = view.findViewById(R.id.tv_rdv_count);
+        tvMedCount = view.findViewById(R.id.tv_med_count);
+        tvOrdoCount = view.findViewById(R.id.tv_ordo_count);
+
+        // Métriques cliquables
+        cardSleep = view.findViewById(R.id.card_sleep);
+        cardSteps = view.findViewById(R.id.card_steps);
+        cardWater = view.findViewById(R.id.card_water);
+
+        // Chargement des données
+        loadUserData();
+
+        // Gestion des clics
+        setupClickListeners();
 
         return view;
     }
 
-    /**
-     * Coloration néon animée du runner : cyan → bleu → violet → cyan
-     */
-    private void lancerAnimationRunner(int score) {
-        Integer[] couleurs;
+    private void loadUserData() {
+        try {
+            tvUsername.setText("Fatima Bouhou");
 
-        if (score >= 80) {
-            couleurs = new Integer[]{
-                    Color.parseColor("#00D4FF"), // cyan néon
-                    Color.parseColor("#0099FF"), // bleu électrique
-                    Color.parseColor("#7C3AED"), // violet
-                    Color.parseColor("#00D4FF")
-            };
-        } else if (score >= 60) {
-            couleurs = new Integer[]{
-                    Color.parseColor("#3B82F6"),
-                    Color.parseColor("#8B5CF6"),
-                    Color.parseColor("#06B6D4"),
-                    Color.parseColor("#3B82F6")
-            };
-        } else if (score >= 40) {
-            couleurs = new Integer[]{
-                    Color.parseColor("#F59E0B"),
-                    Color.parseColor("#EF4444"),
-                    Color.parseColor("#F97316"),
-                    Color.parseColor("#F59E0B")
-            };
-        } else {
-            couleurs = new Integer[]{
-                    Color.parseColor("#EF4444"),
-                    Color.parseColor("#F43F5E"),
-                    Color.parseColor("#DC2626"),
-                    Color.parseColor("#EF4444")
-            };
+            // Date dynamique
+            String today = new SimpleDateFormat("EEEE d MMMM", Locale.FRENCH).format(new Date());
+            String dateFormatted = today.substring(0, 1).toUpperCase() + today.substring(1);
+            tvDate.setText(dateFormatted);
+
+            tvHealthScore.setText("85");
+            tvSleepHours.setText("7h24");
+            tvStepsCount.setText("6 542");
+            tvWaterCount.setText("4/8");
+            tvRdvCount.setText("2");
+            tvMedCount.setText("3");
+            tvOrdoCount.setText("5");
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        if (colorAnimator != null) colorAnimator.cancel();
-
-        colorAnimator = ValueAnimator.ofObject(new ArgbEvaluator(), (Object[]) couleurs);
-        colorAnimator.setDuration(3000);
-        colorAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        colorAnimator.setRepeatMode(ValueAnimator.REVERSE);
-
-        colorAnimator.addUpdateListener(animator -> {
-            int c = (int) animator.getAnimatedValue();
-            lottieRunner.addValueCallback(
-                    new KeyPath("**"),
-                    LottieProperty.COLOR,
-                    frameInfo -> c
-            );
-        });
-
-        colorAnimator.start();
     }
 
-    /**
-     * Animation du glow : pulse d'alpha — effet respiration lumineuse
-     */
-    private void lancerAnimationGlow() {
-        if (glowAnimator != null) glowAnimator.cancel();
+    private void setupClickListeners() {
+        btnNotification.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Profil", Toast.LENGTH_SHORT).show());
 
-        glowAnimator = ValueAnimator.ofFloat(0.2f, 1.0f);
-        glowAnimator.setDuration(1500);
-        glowAnimator.setRepeatCount(ValueAnimator.INFINITE);
-        glowAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        cardStatRdv.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Détails Rendez-vous", Toast.LENGTH_SHORT).show());
 
-        glowAnimator.addUpdateListener(animator -> {
-            float alpha = (float) animator.getAnimatedValue();
-            // Chaque cercle pulse à une intensité différente — effet de profondeur
-            if (glowOuter != null) glowOuter.setAlpha(alpha * 0.4f);
-            if (glowMid   != null) glowMid.setAlpha(alpha * 0.65f);
-            if (glowInner != null) glowInner.setAlpha(alpha);
-        });
+        cardStatMed.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Détails Médicaments", Toast.LENGTH_SHORT).show());
 
-        glowAnimator.start();
+        cardStatOrdo.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Détails Ordonnances", Toast.LENGTH_SHORT).show());
+
+        cardSleep.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Analyse du sommeil", Toast.LENGTH_SHORT).show());
+
+        cardSteps.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Détail des pas", Toast.LENGTH_SHORT).show());
+
+        cardWater.setOnClickListener(v ->
+                Toast.makeText(getContext(), "Suivi hydratation", Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (savedInstanceState == null) {
-            getChildFragmentManager().beginTransaction()
-                    .replace(R.id.chart_container, new FragmentVisitsChart())
-                    .commit();
+            try {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.chart_container, new FragmentVisitsChart())
+                        .commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (colorAnimator != null) { colorAnimator.cancel(); colorAnimator = null; }
-        if (glowAnimator  != null) { glowAnimator.cancel();  glowAnimator  = null; }
     }
 }

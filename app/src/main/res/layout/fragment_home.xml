@@ -12,160 +12,325 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- ===== HEADER ===== -->
+        <!-- ===== HEADER PROFESSIONNEL CORRIGÉ ===== -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="24dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_centerVertical="true">
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Bonjour 👋"
-                    android:textColor="#64748B"
-                    android:textSize="14sp"/>
+                    android:text="Bienvenue"
+                    android:textColor="#018ABE"
+                    android:textSize="13sp"
+                    android:textStyle="bold"/>
+
                 <TextView
                     android:id="@+id/tv_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Fatima Bouhou"
-                    android:textColor="#0F172A"
+                    android:textColor="#001B48"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:layout_marginTop="2dp"/>
+
+                <TextView
+                    android:id="@+id/tv_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mardi 26 mai"
+                    android:textColor="#94A3B8"
+                    android:textSize="13sp"
+                    android:layout_marginTop="4dp"/>
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/btn_notification"
-                android:layout_width="46dp"
-                android:layout_height="46dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                app:cardCornerRadius="23dp"
-                app:cardElevation="4dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="3dp"
                 app:cardBackgroundColor="#FFFFFF">
+
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/notif"
-                    android:scaleType="centerInside"/>
+                    android:src="@drawable/ic_profile"
+                    android:tint="#018ABE"/>
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
-        <!-- ===== CARD RUNNER — DARK NEON ===== -->
+        <!-- ===== CARD SANTÉ ===== -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_runner"
+            android:id="@+id/card_health"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            app:cardCornerRadius="32dp"
-            app:cardElevation="20dp"
-            app:cardBackgroundColor="#0D1B2A">
+            app:cardCornerRadius="28dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#FFFFFF">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="28dp"
-                android:paddingBottom="28dp"
-                android:paddingHorizontal="20dp">
+                android:padding="24dp">
 
-                <!-- Label haut -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SANTÉ GLOBALE"
-                    android:textColor="#4A90A4"
-                    android:textStyle="bold"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.25"
-                    android:layout_marginBottom="16dp"/>
-
-                <!-- Cercle lumineux autour du runner -->
-                <FrameLayout
-                    android:layout_width="220dp"
-                    android:layout_height="220dp"
-                    android:layout_gravity="center">
-
-                    <!-- Cercle glow externe (le plus grand, le plus transparent) -->
-                    <View
-                        android:id="@+id/glow_outer"
-                        android:layout_width="220dp"
-                        android:layout_height="220dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_glow_outer"
-                        android:alpha="0.4"/>
-
-                    <!-- Cercle glow moyen -->
-                    <View
-                        android:id="@+id/glow_mid"
-                        android:layout_width="190dp"
-                        android:layout_height="190dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_glow_mid"
-                        android:alpha="0.6"/>
-
-                    <!-- Cercle glow interne -->
-                    <View
-                        android:id="@+id/glow_inner"
-                        android:layout_width="160dp"
-                        android:layout_height="160dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_glow_inner"
-                        android:alpha="0.85"/>
-
-                    <!-- Lottie Runner centré -->
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/lottie_runner"
-                        android:layout_width="150dp"
-                        android:layout_height="190dp"
-                        android:layout_gravity="center"
-                        app:lottie_rawRes="@raw/runner"
-                        app:lottie_autoPlay="true"
-                        app:lottie_loop="true"/>
-
-                </FrameLayout>
-
-                <!-- Score -->
-                <TextView
-                    android:id="@+id/tv_health_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="85"
-                    android:textColor="#FFFFFF"
-                    android:textSize="64sp"
-                    android:fontFamily="sans-serif-black"
-                    android:includeFontPadding="false"
-                    android:layout_marginTop="16dp"/>
-
-                <!-- Sous-score -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="85 / 100"
-                    android:textColor="#4A90A4"
-                    android:textSize="13sp"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="16dp"/>
-
-                <!-- Badge néon -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Excellent"
-                    android:textColor="#00D4FF"
-                    android:background="@drawable/bg_badge_neon"
+                    android:textColor="#018ABE"
                     android:textStyle="bold"
                     android:textSize="12sp"
-                    android:paddingHorizontal="20dp"
-                    android:paddingVertical="8dp"/>
+                    android:layout_marginBottom="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_health_score"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="85"
+                            android:textColor="#001B48"
+                            android:textSize="58sp"
+                            android:textStyle="bold"
+                            android:includeFontPadding="false"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="sur 100"
+                            android:textColor="#94A3B8"
+                            android:textSize="14sp"
+                            android:layout_marginTop="-6dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/tv_status_badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center"
+                        android:background="#E0F2FE"
+                        android:paddingLeft="14dp"
+                        android:paddingRight="14dp"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📈"
+                            android:textSize="14sp"
+                            android:layout_marginEnd="6dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+5 pts"
+                            android:textColor="#018ABE"
+                            android:textSize="13sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#E2E8F0"
+                    android:layout_marginBottom="20dp"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/card_sleep"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_sleep"
+                            android:tint="#02457A"/>
+
+                        <TextView
+                            android:id="@+id/tv_sleep_hours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="7h24"
+                            android:textColor="#001B48"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Sommeil"
+                            android:textColor="#64748B"
+                            android:textSize="13sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/card_steps"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_steps"
+                            android:tint="#02457A"/>
+
+                        <TextView
+                            android:id="@+id/tv_steps_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="6 542"
+                            android:textColor="#001B48"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Pas"
+                            android:textColor="#64748B"
+                            android:textSize="13sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/card_water"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:src="@drawable/ic_water"
+                            android:tint="#02457A"/>
+
+                        <TextView
+                            android:id="@+id/tv_water_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="4/8"
+                            android:textColor="#001B48"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="10dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Verres"
+                            android:textColor="#64748B"
+                            android:textSize="13sp"
+                            android:layout_marginTop="4dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="8dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Objectif hebdomadaire"
+                            android:textColor="#64748B"
+                            android:textSize="12sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="85%"
+                            android:textColor="#018ABE"
+                            android:textSize="13sp"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="6dp"
+                        android:background="#E2E8F0"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="85"
+                            android:background="#018ABE"/>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="15"
+                            android:background="#E2E8F0"/>
+                    </LinearLayout>
+                </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -203,7 +368,7 @@
                     android:src="@drawable/calendrier"
                     android:scaleType="centerInside"/>
 
-                <view class="android.view.View"
+                <View
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:layout_weight="1"/>
@@ -215,7 +380,7 @@
                     android:text="2"
                     android:textColor="#FFFFFF"
                     android:textSize="38sp"
-                    android:fontFamily="sans-serif-black"
+                    android:textStyle="bold"
                     android:includeFontPadding="false"/>
 
                 <TextView
@@ -264,7 +429,7 @@
                             android:text="3"
                             android:textColor="#0F172A"
                             android:textSize="22sp"
-                            android:fontFamily="sans-serif-bold"/>
+                            android:textStyle="bold"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -303,7 +468,7 @@
                             android:text="5"
                             android:textColor="#0F172A"
                             android:textSize="22sp"
-                            android:fontFamily="sans-serif-bold"/>
+                            android:textStyle="bold"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
