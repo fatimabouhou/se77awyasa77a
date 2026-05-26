@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue_light_2">
+
+    <!-- Header background -->
+    <View
+        android:id="@+id/viewHeader"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:background="@color/blue_dark_2"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/llHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="60dp"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HealthTracker"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:fontFamily="@font/nunito_bold"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Votre santé, notre priorité"
+            android:textSize="14sp"
+            android:fontFamily="@font/nunito_bold"
+            android:textColor="@color/blue_light_1"
+            android:layout_marginTop="4dp"/>
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginTop="40dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="10dp"
+        app:layout_constraintTop_toBottomOf="@id/llHeader">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="32dp"
+            android:background="@color/white">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Connexion"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/blue_dark_1"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ravi de vous revoir !"
+                android:textSize="14sp"
+                android:fontFamily="@font/nunito_bold"
+                android:textColor="@color/gray_text"
+                android:layout_marginBottom="24dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email"
+                android:textSize="12sp"
+                android:textColor="@color/blue_dark_2"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_bold"
+                android:layout_marginBottom="6dp"/>
+
+            <EditText
+                android:id="@+id/etEmail"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:hint="exemple@email.com"
+                android:inputType="textEmailAddress"
+                android:fontFamily="@font/nunito_bold"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="15sp"
+                android:layout_marginBottom="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mot de passe"
+                android:textSize="12sp"
+                android:textColor="@color/blue_dark_2"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_bold"
+                android:layout_marginBottom="6dp"/>
+
+            <EditText
+                android:id="@+id/etPassword"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:hint="••••••••"
+                android:inputType="textPassword"
+                android:fontFamily="@font/nunito_bold"
+                android:background="@drawable/input_bg"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textSize="15sp"
+                android:layout_marginBottom="24dp"/>
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Se connecter"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:fontFamily="@font/nunito_bold"
+                android:background="@drawable/btn_primary"
+                android:textAllCaps="false"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/tvGoRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Pas encore de compte ? S'inscrire"
+        android:fontFamily="@font/nunito_bold"
+        android:textColor="@color/blue_medium"
+        android:textSize="14sp"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/cvLogin"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
