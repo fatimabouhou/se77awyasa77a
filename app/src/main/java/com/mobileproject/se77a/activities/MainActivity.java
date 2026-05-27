@@ -1,70 +1,38 @@
-package com.mobileproject.se77a.activities; // À modifier selon ton projet
+package com.mobileproject.se77a.activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 import com.mobileproject.se77a.R;
-import com.mobileproject.se77a.fragments.FragmentHome;
-import com.mobileproject.se77a.fragments.FragmentTracking;
+import com.mobileproject.se77a.fragments.BottomNavFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    private LinearLayout navHome, navRdv;
-    private TextView tvNavHome, tvNavRdv;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialisation des boutons de navigation
-        navHome = findViewById(R.id.nav_home);
-        navRdv = findViewById(R.id.nav_rdv);
-        tvNavHome = findViewById(R.id.tv_nav_home);
-        tvNavRdv = findViewById(R.id.tv_nav_rdv);
+        // 1. Récupérer le NavHostFragment et le NavController
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment);
+        if (navHostFragment != null) {
+            navController = navHostFragment.getNavController();
+        }
 
-        // Charger le premier fragment par défaut (Home)
+        // 2. Charger ton BottomNavFragment custom (si tu n'utilises pas une BottomNavigationView standard)
         if (savedInstanceState == null) {
-            loadFragment(new FragmentHome());
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.bottom_nav_container, new BottomNavFragment())
+                    .commit();
         }
-
-        // Événement de clic sur Accueil
-        navHome.setOnClickListener(v -> {
-            loadFragment(new FragmentHome());
-            updateBottomNavUI(true);
-        });
-
-        // Événement de clic sur Suivi (RDV)
-        navRdv.setOnClickListener(v -> {
-            loadFragment(new FragmentTracking());
-            updateBottomNavUI(false);
-        });
     }
 
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
-    }
-
-    // Alterne les couleurs du texte pour simuler la sélection
-    private void updateBottomNavUI(boolean isHomeSelected) {
-        if (isHomeSelected) {
-            tvNavHome.setTextColor(Color.parseColor("#6C5CE7")); // Violet sélectionné
-            tvNavHome.setTypeface(null, android.graphics.Typeface.BOLD);
-            tvNavRdv.setTextColor(Color.parseColor("#7B8FB0"));   // Gris neutre
-            tvNavRdv.setTypeface(null, android.graphics.Typeface.NORMAL);
-        } else {
-            tvNavHome.setTextColor(Color.parseColor("#7B8FB0"));
-            tvNavHome.setTypeface(null, android.graphics.Typeface.NORMAL);
-            tvNavRdv.setTextColor(Color.parseColor("#6C5CE7"));
-            tvNavRdv.setTypeface(null, android.graphics.Typeface.BOLD);
-        }
+    // Exposer le NavController pour que le BottomNavFragment puisse changer d'écran
+    public NavController getNavController() {
+        return navController;
     }
 }

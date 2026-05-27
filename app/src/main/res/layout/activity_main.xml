@@ -7,109 +7,19 @@
     android:background="#0A0E27">
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container"
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="64dp" /> <LinearLayout
-    android:id="@+id/bottom_nav"
-    android:layout_width="match_parent"
-    android:layout_height="64dp"
-    android:layout_gravity="bottom"
-    android:orientation="horizontal"
-    android:background="#0F1535"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:elevation="16dp">
+        android:paddingBottom="64dp"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
 
-    <LinearLayout
-        android:id="@+id/nav_home"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🏠"
-            android:textSize="20sp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/tv_nav_home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Accueil"
-            android:textColor="#6C5CE7"
-            android:textSize="10sp"
-            android:textStyle="bold"/>
-    </LinearLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/bottom_nav_container"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:elevation="16dp"/>
 
-    <LinearLayout
-        android:id="@+id/nav_rdv"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:clickable="true"
-        android:focusable="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📅"
-            android:textSize="20sp"
-            android:gravity="center"/>
-        <TextView
-            android:id="@+id/tv_nav_rdv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Suivi"
-            android:textColor="#7B8FB0"
-            android:textSize="10sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/nav_medications"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="💊"
-            android:textSize="20sp"
-            android:gravity="center"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Médicaments"
-            android:textColor="#7B8FB0"
-            android:textSize="10sp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/nav_profile"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        android:gravity="center">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="👤"
-            android:textSize="20sp"
-            android:gravity="center"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Profil"
-            android:textColor="#7B8FB0"
-            android:textSize="10sp"/>
-    </LinearLayout>
-</LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
