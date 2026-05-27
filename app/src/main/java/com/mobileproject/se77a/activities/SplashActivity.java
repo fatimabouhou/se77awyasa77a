@@ -135,7 +135,7 @@ public class SplashActivity extends AppCompatActivity {
 
         // Configuration du minuteur de redirection automatique
         handler = new Handler(Looper.getMainLooper());
-        autoNavigateRunnable = this::navigateToMain;
+        autoNavigateRunnable = this::navigateToLogin;
         handler.postDelayed(autoNavigateRunnable, AUTO_NAVIGATE_DELAY);
     }
 
@@ -150,9 +150,9 @@ public class SplashActivity extends AppCompatActivity {
         floatUp.start();
     }
 
-    /** Changement d'écran vers la MainActivity avec transition propre */
-    private void navigateToMain() {
-        Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+    /** Changement d'écran vers la LoginActivity avec transition propre */
+    private void navigateToLogin() {
+        Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
