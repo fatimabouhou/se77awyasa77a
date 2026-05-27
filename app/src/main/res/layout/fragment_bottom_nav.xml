@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/bottom_nav"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="72dp"
     android:orientation="horizontal"
-    android:background="#0F1535"
+    android:background="@color/white"
+    android:elevation="12dp"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:elevation="16dp">
+    android:paddingBottom="12dp">
 
+    <!-- Menu 1 : Accueil -->
     <LinearLayout
         android:id="@+id/nav_home"
         android:layout_width="0dp"
@@ -18,23 +20,27 @@
         android:orientation="vertical"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="🏠"
-            android:textSize="20sp"
-            android:gravity="center"/>
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/ic_nav_home"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_home_outline"
+            android:tint="#8E8E93"/>
+
         <TextView
             android:id="@+id/tv_nav_home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Accueil"
-            android:textColor="#6C5CE7"
+            android:textColor="#8E8E93"
             android:textSize="10sp"
-            android:textStyle="bold"/>
+            android:layout_marginTop="4dp"/>
     </LinearLayout>
 
+    <!-- Menu 2 : Suivi -->
     <LinearLayout
         android:id="@+id/nav_rdv"
         android:layout_width="0dp"
@@ -43,22 +49,27 @@
         android:orientation="vertical"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="📅"
-            android:textSize="20sp"
-            android:gravity="center"/>
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/ic_nav_rdv"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_tracking_outline"
+            android:tint="#8E8E93"/>
+
         <TextView
             android:id="@+id/tv_nav_rdv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Suivi"
-            android:textColor="#7B8FB0"
-            android:textSize="10sp"/>
+            android:textColor="#8E8E93"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"/>
     </LinearLayout>
 
+    <!-- Menu 3 : Médicaments -->
     <LinearLayout
         android:id="@+id/nav_medications"
         android:layout_width="0dp"
@@ -67,22 +78,27 @@
         android:orientation="vertical"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="💊"
-            android:textSize="20sp"
-            android:gravity="center"/>
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/ic_nav_medications"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_medication_outline"
+            android:tint="#8E8E93"/>
+
         <TextView
             android:id="@+id/tv_nav_medications"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Médicaments"
-            android:textColor="#7B8FB0"
-            android:textSize="10sp"/>
+            android:textColor="#8E8E93"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"/>
     </LinearLayout>
 
+    <!-- Menu 4 : Profil -->
     <LinearLayout
         android:id="@+id/nav_profile"
         android:layout_width="0dp"
@@ -91,20 +107,24 @@
         android:orientation="vertical"
         android:gravity="center"
         android:clickable="true"
-        android:focusable="true">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="👤"
-            android:textSize="20sp"
-            android:gravity="center"/>
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless">
+
+        <ImageView
+            android:id="@+id/ic_nav_profile"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/ic_profile_outline"
+            android:tint="#8E8E93"/>
+
         <TextView
             android:id="@+id/tv_nav_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Profil"
-            android:textColor="#7B8FB0"
-            android:textSize="10sp"/>
+            android:textColor="#8E8E93"
+            android:textSize="10sp"
+            android:layout_marginTop="4dp"/>
     </LinearLayout>
 
 </LinearLayout>

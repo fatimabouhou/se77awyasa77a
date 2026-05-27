@@ -1,24 +1,31 @@
 package com.mobileproject.se77a.fragments;
 
-import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
 
 import com.mobileproject.se77a.R;
 import com.mobileproject.se77a.activities.MainActivity;
 
 public class BottomNavFragment extends Fragment {
 
-    private TextView tvNavHome, tvNavRdv, tvNavMedications, tvNavProfile;
+    private ImageView icHome, icTracking, icMedication, icProfile;
+    private TextView tvHome, tvTracking, tvMedication, tvProfile;
+
+    private static final int COLOR_INACTIVE = 0xFF8E8E93;  // Gris iOS
+    private static final int COLOR_ACTIVE = 0xFF007AFF;   // Bleu iOS
 
     @Nullable
     @Override
@@ -32,66 +39,97 @@ public class BottomNavFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayout navHome        = view.findViewById(R.id.nav_home);
-        LinearLayout navRdv         = view.findViewById(R.id.nav_rdv);
+        // Initialisation des layouts cliquables
+        LinearLayout navHome = view.findViewById(R.id.nav_home);
+        LinearLayout navRdv = view.findViewById(R.id.nav_rdv);
         LinearLayout navMedications = view.findViewById(R.id.nav_medications);
-        LinearLayout navProfile     = view.findViewById(R.id.nav_profile);
+        LinearLayout navProfile = view.findViewById(R.id.nav_profile);
 
-        tvNavHome        = view.findViewById(R.id.tv_nav_home);
-        tvNavRdv         = view.findViewById(R.id.tv_nav_rdv);
-        tvNavMedications = view.findViewById(R.id.tv_nav_medications);
-        tvNavProfile     = view.findViewById(R.id.tv_nav_profile);
+        // Initialisation des vues UI
+        icHome = view.findViewById(R.id.ic_nav_home);
+        icTracking = view.findViewById(R.id.ic_nav_rdv);
+        icMedication = view.findViewById(R.id.ic_nav_medications);
+        icProfile = view.findViewById(R.id.ic_nav_profile);
 
-        navHome.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).loadFragment(new FragmentHome());
-            updateUI("home");
-        });
+        tvHome = view.findViewById(R.id.tv_nav_home);
+        tvTracking = view.findViewById(R.id.tv_nav_rdv);
+        tvMedication = view.findViewById(R.id.tv_nav_medications);
+        tvProfile = view.findViewById(R.id.tv_nav_profile);
 
-        navRdv.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).loadFragment(new FragmentTracking());
-            updateUI("rdv");
-        });
+        // Récupération du NavController depuis la MainActivity
+        if (getActivity() instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            NavController navController = mainActivity.getNavController();
 
-        navMedications.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).loadFragment(new FragmentMedications());
-            updateUI("medications");
-        });
+            if (navController != null) {
+                // 1. Écouter les changements de destination pour mettre à jour l'UI automatiquement
+                navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+                    int id = destination.getId();
+                    if (id == R.id.fragmentHome) {
+                        updateUI("home");
+                    } else if (id == R.id.fragmentTracking) {
+                        updateUI("tracking");
+                    } else if (id == R.id.fragmentMedications) {
+                        updateUI("medications");
+                    } else if (id == R.id.fragmentProfile) {
+                        updateUI("profile");
+                    }
+                });
 
-        navProfile.setOnClickListener(v -> {
-            ((MainActivity) requireActivity()).loadFragment(new FragmentProfile());
-            updateUI("profile");
-        });
+                // 2. Gérer les clics sur l'UI pour déclencher la navigation Jetpack
+                navHome.setOnClickListener(v -> navController.navigate(R.id.fragmentHome));
+                navRdv.setOnClickListener(v -> navController.navigate(R.id.fragmentTracking));
+                navMedications.setOnClickListener(v -> navController.navigate(R.id.fragmentMedications));
+                navProfile.setOnClickListener(v -> navController.navigate(R.id.fragmentProfile));
+            }
+        }
     }
 
     private void updateUI(String selected) {
-        // Reset tout
-        tvNavHome.setTextColor(Color.parseColor("#7B8FB0"));
-        tvNavHome.setTypeface(null, Typeface.NORMAL);
-        tvNavRdv.setTextColor(Color.parseColor("#7B8FB0"));
-        tvNavRdv.setTypeface(null, Typeface.NORMAL);
-        tvNavMedications.setTextColor(Color.parseColor("#7B8FB0"));
-        tvNavMedications.setTypeface(null, Typeface.NORMAL);
-        tvNavProfile.setTextColor(Color.parseColor("#7B8FB0"));
-        tvNavProfile.setTypeface(null, Typeface.NORMAL);
+        resetToInactive();
 
-        // Activer le tab sélectionné
         switch (selected) {
             case "home":
-                tvNavHome.setTextColor(Color.parseColor("#6C5CE7"));
-                tvNavHome.setTypeface(null, Typeface.BOLD);
+                setActive(icHome, tvHome, R.drawable.ic_home_filled);
                 break;
-            case "rdv":
-                tvNavRdv.setTextColor(Color.parseColor("#6C5CE7"));
-                tvNavRdv.setTypeface(null, Typeface.BOLD);
+            case "tracking":
+                setActive(icTracking, tvTracking, R.drawable.ic_tracking_filled);
                 break;
             case "medications":
-                tvNavMedications.setTextColor(Color.parseColor("#6C5CE7"));
-                tvNavMedications.setTypeface(null, Typeface.BOLD);
+                setActive(icMedication, tvMedication, R.drawable.ic_medication_filled);
                 break;
             case "profile":
-                tvNavProfile.setTextColor(Color.parseColor("#6C5CE7"));
-                tvNavProfile.setTypeface(null, Typeface.BOLD);
+                setActive(icProfile, tvProfile, R.drawable.ic_profile_filled);
                 break;
         }
+    }
+
+    private void resetToInactive() {
+        icHome.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_home_outline));
+        icTracking.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_tracking_outline));
+        icMedication.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_medication_outline));
+        icProfile.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_profile_outline));
+
+        icHome.setColorFilter(COLOR_INACTIVE, PorterDuff.Mode.SRC_IN);
+        icTracking.setColorFilter(COLOR_INACTIVE, PorterDuff.Mode.SRC_IN);
+        icMedication.setColorFilter(COLOR_INACTIVE, PorterDuff.Mode.SRC_IN);
+        icProfile.setColorFilter(COLOR_INACTIVE, PorterDuff.Mode.SRC_IN);
+
+        tvHome.setTextColor(COLOR_INACTIVE);
+        tvTracking.setTextColor(COLOR_INACTIVE);
+        tvMedication.setTextColor(COLOR_INACTIVE);
+        tvProfile.setTextColor(COLOR_INACTIVE);
+
+        tvHome.setTypeface(null, Typeface.NORMAL);
+        tvTracking.setTypeface(null, Typeface.NORMAL);
+        tvMedication.setTypeface(null, Typeface.NORMAL);
+        tvProfile.setTypeface(null, Typeface.NORMAL);
+    }
+
+    private void setActive(ImageView icon, TextView text, int filledIconRes) {
+        icon.setImageDrawable(ContextCompat.getDrawable(requireContext(), filledIconRes));
+        icon.setColorFilter(COLOR_ACTIVE, PorterDuff.Mode.SRC_IN);
+        text.setTextColor(COLOR_ACTIVE);
+        text.setTypeface(null, Typeface.BOLD);
     }
 }
