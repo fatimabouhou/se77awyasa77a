@@ -34,5 +34,8 @@ public class UserRepository {
     public User login(String email, String password) {
         // On demande directement au DAO de chercher dans la base SQLite
         return userDao.login(email, password);
+
+
     }
+
 }

@@ -9,4 +9,32 @@
     <color name="blue_light_2">#D6E8EE</color>
 
     <color name="gray_text">#6A7B95</color>
+
+    <!-- Fond de page -->
+    <color name="page_bg">#E8EEF5</color>
+
+    <!-- Textes -->
+    <color name="text_primary">#1B2D4F</color>     <!-- Titres, noms, labels forts -->
+    <color name="text_secondary">#6B8BB5</color>   <!-- Sous-titres, labels secondaires -->
+
+    <!-- Bleus palette -->
+    <color name="blue_dark">#1B2D4F</color>        <!-- Avatar RDV, bouton Détails, icônes grille -->
+    <color name="blue_mid">#3A6FA8</color>          <!-- Barre progression fill, % -->
+    <color name="blue_light_bg">#C8DDF5</color>    <!-- Cercle médicament pris -->
+    <color name="blue_icon">#4A7FC1</color>        <!-- Coche médicament pris -->
+
+        <!-- Badge temps -->
+    <color name="badge_gray">#E8EEF5</color>
+
+        <!-- Médicament en attente -->
+    <color name="pending_bg">#FCDDB5</color>       <!-- Cercle beige -->
+    <color name="pending_icon">#D4812A</color>     <!-- Icône horloge orange -->
+
+        <!-- Barre progression fond -->
+    <color name="progress_bg">#D4E3F2</color>
+
+        <!-- Cartes -->
+    <color name="card_bg">#FFFFFF</color>
+    <color name="separator">#E8EEF5</color>
+
 </resources>

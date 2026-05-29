@@ -12,7 +12,7 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- ===== HEADER ===== -->
+        <!-- HEADER -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,8 +32,7 @@
                     android:text="BIENVENUE"
                     android:textColor="#185FA5"
                     android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.12"/>
+                    android:textStyle="bold"/>
 
                 <TextView
                     android:id="@+id/tv_username"
@@ -77,7 +76,7 @@
             </androidx.cardview.widget.CardView>
         </RelativeLayout>
 
-        <!-- ===== CARTE SANTÉ GLOBALE ===== -->
+        <!-- CARTE SANTE GLOBALE -->
         <androidx.cardview.widget.CardView
             android:id="@+id/card_health"
             android:layout_width="match_parent"
@@ -100,7 +99,6 @@
                     android:textColor="#185FA5"
                     android:textStyle="bold"
                     android:textSize="10sp"
-                    android:letterSpacing="0.12"
                     android:layout_marginBottom="14dp"/>
 
                 <!-- Score + badge -->
@@ -175,7 +173,7 @@
                     android:background="#E6F1FB"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Métriques : Sommeil / Pas / Eau -->
+                <!-- Tuiles metriques -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -183,6 +181,7 @@
                     android:weightSum="3"
                     android:layout_marginBottom="16dp">
 
+                    <!-- Sommeil -->
                     <LinearLayout
                         android:id="@+id/card_sleep"
                         android:layout_width="0dp"
@@ -221,6 +220,7 @@
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
 
+                    <!-- Pas -->
                     <LinearLayout
                         android:id="@+id/card_steps"
                         android:layout_width="0dp"
@@ -259,6 +259,7 @@
                             android:layout_marginTop="2dp"/>
                     </LinearLayout>
 
+                    <!-- Eau -->
                     <LinearLayout
                         android:id="@+id/card_water"
                         android:layout_width="0dp"
@@ -342,7 +343,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- ===== RÉSUMÉ DU JOUR ===== -->
+        <!-- RESUME DU JOUR -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -403,7 +404,7 @@
                     android:layout_marginTop="2dp"/>
             </LinearLayout>
 
-            <!-- Colonne droite : Médicaments + Ordonnances -->
+            <!-- Colonne droite -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -411,6 +412,7 @@
                 android:orientation="vertical"
                 android:weightSum="2">
 
+                <!-- Medicaments -->
                 <LinearLayout
                     android:id="@+id/card_stat_med"
                     android:layout_width="match_parent"
@@ -455,6 +457,7 @@
                     </LinearLayout>
                 </LinearLayout>
 
+                <!-- Ordonnances -->
                 <LinearLayout
                     android:id="@+id/card_stat_ordo"
                     android:layout_width="match_parent"
@@ -500,7 +503,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ===== CHART FRAGMENT ===== -->
+        <!-- CHART FRAGMENT -->
         <FrameLayout
             android:id="@+id/chart_container"
             android:layout_width="match_parent"
