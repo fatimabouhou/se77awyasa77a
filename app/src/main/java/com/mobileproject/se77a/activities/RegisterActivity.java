@@ -13,17 +13,25 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.models.User;
+import com.mobileproject.se77a.repository.UserRepository;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText etNom, etEmail, etPassword, etConfirmPassword;
-    Button btnRegister;
-    TextView tvGoLogin;
+    private EditText etNom, etEmail, etPassword, etConfirmPassword;
+    private Button btnRegister;
+    private TextView tvGoLogin;
+
+    // Le Repository Room relié à ton écran
+    private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        // Initialisation de notre gestionnaire de données
+        userRepository = new UserRepository(this);
 
         etNom = findViewById(R.id.etNom);
         etEmail = findViewById(R.id.etEmail);
@@ -48,10 +56,19 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            // TODO: sauvegarder dans Room plus tard
-            Toast.makeText(this, "Compte créé avec succès !", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
+            // Création de l'objet utilisateur à partir des champs
+            User nouvelUtilisateur = new User(nom, email, password);
+
+            // Envoi au repository pour vérification et sauvegarde Room
+            boolean isSuccess = userRepository.registerUser(nouvelUtilisateur);
+
+            if (isSuccess) {
+                Toast.makeText(this, "Compte créé avec succès dans Room !", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            } else {
+                Toast.makeText(this, "Erreur : Cet email est déjà utilisé !", Toast.LENGTH_LONG).show();
+            }
         });
 
         tvGoLogin.setOnClickListener(v -> {

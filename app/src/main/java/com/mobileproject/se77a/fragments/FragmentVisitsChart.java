@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -23,11 +26,21 @@ public class FragmentVisitsChart extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_visits_chart, container, false);
 
         LineChart lineChart = view.findViewById(R.id.lineChart);
+        setupChart(lineChart);
 
+        return view;
+    }
+
+    private void setupChart(LineChart lineChart) {
+
+        // ── Données ────────────────────────────────────────────────
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry(0, 2f)); // Jan
         entries.add(new Entry(1, 4f)); // Fév
@@ -37,58 +50,67 @@ public class FragmentVisitsChart extends Fragment {
 
         LineDataSet dataSet = new LineDataSet(entries, "Visites");
 
-        // 1. Fluidité absolue de la courbe (Bézier)
+        // ── Courbe Bézier fluide ───────────────────────────────────
         dataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         dataSet.setCubicIntensity(0.25f);
 
-        // 2. Style de la ligne principale (Bleu Tech Premium)
-        dataSet.setColor(Color.parseColor("#2563EB"));
-        dataSet.setLineWidth(3.5f);
+        // ── Style ligne : bleu premium ─────────────────────────────
+        dataSet.setColor(Color.parseColor("#378ADD"));
+        dataSet.setLineWidth(3f);
 
-        // 3. Élimination des points basiques sur chaque étape (Style épuré)
-        dataSet.setDrawCircles(false);
+        // ── Point final mis en valeur ──────────────────────────────
+        dataSet.setDrawCircles(true);
+        dataSet.setCircleRadius(5f);
+        dataSet.setCircleHoleRadius(3f);
+        dataSet.setCircleColor(Color.parseColor("#185FA5"));
+        dataSet.setCircleHoleColor(Color.WHITE);
+        dataSet.setDrawCircleHole(true);
 
-        // 4. Masquer les valeurs numériques sur les points (Évite la surcharge visuelle)
+        // Masquer toutes les valeurs numériques sur la courbe
         dataSet.setDrawValues(false);
 
-        // 5. Remplissage sous la courbe avec un dégradé fluide vers la transparence
+        // ── Remplissage dégradé sous la courbe ────────────────────
         if (getContext() != null) {
             GradientDrawable gradientDrawable = new GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{Color.parseColor("#403B82F6"), Color.parseColor("#00FFFFFF")}
+                    new int[]{
+                            Color.parseColor("#4D378ADD"),   // 30% opacité bleu
+                            Color.parseColor("#00EEF5FB")    // transparent vers la couleur du fond
+                    }
             );
             dataSet.setDrawFilled(true);
             dataSet.setFillDrawable(gradientDrawable);
-        } else {
-            dataSet.setDrawFilled(true);
-            dataSet.setFillColor(Color.parseColor("#3B82F6"));
-            dataSet.setFillAlpha(30);
         }
 
         LineData data = new LineData(dataSet);
         lineChart.setData(data);
 
-        // ==========================================
-        // NETTOYAGE COMPLET DE L'INTERFACE GRAPHIQUE
-        // ==========================================
+        // ── Nettoyage complet de l'interface ──────────────────────
         lineChart.getDescription().setEnabled(false);
         lineChart.getLegend().setEnabled(false);
 
-        // On cache tous les axes et grilles pour que la vague fusionne avec la carte blanche
+        // Axe X : masqué (les mois sont dans le XML)
         lineChart.getXAxis().setEnabled(false);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+
+        // Axes Y : masqués
         lineChart.getAxisLeft().setEnabled(false);
         lineChart.getAxisRight().setEnabled(false);
 
-        // On désactive les zooms et interactions pour ne pas bloquer le scroll de l'écran
+        // Désactiver toutes les interactions (pour ne pas bloquer le scroll)
         lineChart.setTouchEnabled(false);
         lineChart.setDragEnabled(false);
         lineChart.setScaleEnabled(false);
         lineChart.setPinchZoom(false);
+
+        // Fond transparent (la carte CardView fournit le blanc)
         lineChart.setDrawGridBackground(false);
+        lineChart.setBackgroundColor(Color.TRANSPARENT);
 
-        // Animation d'entrée verticale fluide
-        lineChart.animateY(800);
+        // Marges internes nulles pour que la courbe soit flush
+        lineChart.setExtraOffsets(16f, 8f, 16f, 4f);
 
-        return view;
+        // ── Animation d'entrée verticale ──────────────────────────
+        lineChart.animateY(900);
     }
 }

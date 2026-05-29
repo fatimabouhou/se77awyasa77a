@@ -13,12 +13,18 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.models.User;
+import com.mobileproject.se77a.repository.UserRepository; // Ajuste l'import selon ton projet
+import com.mobileproject.se77a.database.SecurityUtils; // Si tu haches le mot de passe
 
 public class LoginActivity extends AppCompatActivity {
 
     EditText etEmail, etPassword;
     Button btnLogin;
     TextView tvGoRegister;
+
+    // 1. Déclarer le Repository
+    private UserRepository userRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +36,9 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         tvGoRegister = findViewById(R.id.tvGoRegister);
 
+        // 2. Initialiser le Repository
+        userRepository = new UserRepository(getApplication());
+
         btnLogin.setOnClickListener(v -> {
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
@@ -39,10 +48,26 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
 
-            // TODO: vérifier avec Room plus tard
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            // 3. Vérification avec Room
+            // Si tu as utilisé le hachage MD5/SHA à l'inscription, applique-le aussi ici :
+            String hashedPassword = SecurityUtils.hashPassword(password);
+
+            // On demande au repository de chercher l'utilisateur
+            User user = userRepository.login(email, hashedPassword);
+
+            if (user != null) {
+                // Succès : L'utilisateur existe en base !
+                Toast.makeText(this, "Connexion réussie ! Bienvenue " + user.getNom(), Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(this, MainActivity.class);
+                // Optionnel : passer le nom à la MainActivity pour l'afficher
+                intent.putExtra("USER_NAME", user.getNom());
+                startActivity(intent);
+                finish();
+            } else {
+                // Échec : Email ou mot de passe incorrect
+                Toast.makeText(this, "Email ou mot de passe incorrect", Toast.LENGTH_LONG).show();
+            }
         });
 
         tvGoRegister.setOnClickListener(v -> {
