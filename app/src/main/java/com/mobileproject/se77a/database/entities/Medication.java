@@ -15,16 +15,20 @@ public class Medication {
     public String startDate;
     public String endDate;
     public String reminderTime;
+    public String type;          // tablet | syrup | injection | drops
     public boolean isActive;
+    public boolean takenToday;   // ← NEW: resets daily, drives the progress bar
 
     public Medication(String name, String dosage, String frequency,
-                      String startDate, String endDate, String reminderTime) {
-        this.name = name;
-        this.dosage = dosage;
-        this.frequency = frequency;
-        this.startDate = startDate;
-        this.endDate = endDate;
+                      String startDate, String endDate, String reminderTime, String type) {
+        this.name         = name;
+        this.dosage       = dosage;
+        this.frequency    = frequency;
+        this.startDate    = startDate;
+        this.endDate      = endDate;
         this.reminderTime = reminderTime;
-        this.isActive = true;
+        this.type         = type;
+        this.isActive     = true;
+        this.takenToday   = false;
     }
 }

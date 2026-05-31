@@ -5,9 +5,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/blue_dark_2"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="16dp"
-    app:cardElevation="4dp">
+    app:cardElevation="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
                     android:layout_width="26dp"
                     android:layout_height="26dp"
                     android:layout_gravity="center"
-                    android:src="@android:drawable/ic_menu_info_details"
+                    android:src="@drawable/medicine"
                     android:contentDescription="Type médicament" />
 
             </FrameLayout>
@@ -51,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Amoxicilline"
-                    android:textColor="@color/white"
+                    android:textColor="@color/blue_dark_1"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:maxLines="1"
@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="500 mg · 3×/jour"
-                    android:textColor="@color/blue_light_1"
+                    android:textColor="@color/blue_medium"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -74,14 +74,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Actif"
-                android:textColor="@color/white"
+                android:textColor="@color/blue_dark_1"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
-                android:background="@drawable/bg_badge_active" />
+                android:background="@drawable/bg_badge_light" />
 
         </LinearLayout>
 
@@ -91,7 +91,7 @@
             android:layout_height="1dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="12dp"
-            android:background="#1597CADB" />
+            android:background="@color/blue_light_2" />
 
         <!-- Bottom row: next dose time + action buttons -->
         <LinearLayout
@@ -104,10 +104,10 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@android:drawable/ic_lock_idle_alarm"
+                android:src="@drawable/ic_calendar"
                 android:alpha="0.7"
                 android:contentDescription="Heure"
-                app:tint="@color/blue_light_1" />
+                app:tint="@color/blue_medium" />
 
             <TextView
                 android:id="@+id/tv_next_dose_time"
@@ -116,7 +116,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
                 android:text="Prochaine prise : 14:00"
-                android:textColor="@color/blue_light_1"
+                android:textColor="@color/blue_dark_2"
                 android:textSize="12sp" />
 
             <!-- Reminder switch -->

@@ -63,7 +63,13 @@ public class RegisterActivity extends AppCompatActivity {
             boolean isSuccess = userRepository.registerUser(nouvelUtilisateur);
 
             if (isSuccess) {
-                Toast.makeText(this, "Compte créé avec succès dans Room !", Toast.LENGTH_SHORT).show();
+                // Sauvegarder le nom pour l'affichage dans FragmentHome
+                getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        .edit()
+                        .putString("current_user_name", nom)
+                        .apply();
+
+                Toast.makeText(this, "Compte créé avec succès !", Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
             } else {

@@ -66,34 +66,45 @@ public class FragmentHome extends Fragment {
     }
 
     private void loadUserData() {
+        if (getContext() == null) return;
         try {
-            String fullName = "Fatima Bouhou";
-            tvUsername.setText(fullName);
+            // Lire le nom sauvegardé de manière sécurisée
+            String fullName = getContext().getSharedPreferences("user_prefs", android.content.Context.MODE_PRIVATE)
+                    .getString("current_user_name", "Utilisateur");
+            
+            if (tvUsername != null) tvUsername.setText(fullName);
 
-            String[] parts = fullName.trim().split("\\s+");
-            String initials = "";
-            if (parts.length >= 2) {
-                initials = String.valueOf(parts[0].charAt(0)).toUpperCase()
-                        + String.valueOf(parts[1].charAt(0)).toUpperCase();
-            } else if (parts.length == 1) {
-                initials = String.valueOf(parts[0].charAt(0)).toUpperCase();
+            // Calcul des initiales sécurisé
+            String initials = "U";
+            if (fullName != null && !fullName.trim().isEmpty()) {
+                String[] parts = fullName.trim().split("\\s+");
+                if (parts.length >= 2 && !parts[0].isEmpty() && !parts[1].isEmpty()) {
+                    initials = String.valueOf(parts[0].charAt(0)).toUpperCase()
+                            + String.valueOf(parts[1].charAt(0)).toUpperCase();
+                } else if (parts.length == 1 && !parts[0].isEmpty()) {
+                    initials = String.valueOf(parts[0].charAt(0)).toUpperCase();
+                }
             }
-            tvAvatarInitials.setText(initials);
+            if (tvAvatarInitials != null) tvAvatarInitials.setText(initials);
 
+            // Formatage de la date
             String today = new SimpleDateFormat("EEEE d MMMM", Locale.FRENCH).format(new Date());
-            String dateFormatted = today.substring(0, 1).toUpperCase() + today.substring(1);
-            tvDate.setText(dateFormatted);
+            if (tvDate != null) {
+                String dateFormatted = today.substring(0, 1).toUpperCase() + today.substring(1);
+                tvDate.setText(dateFormatted);
+            }
 
-            tvHealthScore.setText("85");
-            tvSleepHours.setText("7h24");
-            tvStepsCount.setText("6 542");
-            tvWaterCount.setText("4/8");
-            tvRdvCount.setText("2");
-            tvMedCount.setText("3");
-            tvOrdoCount.setText("5");
+            // Valeurs par défaut pour les stats
+            if (tvHealthScore != null) tvHealthScore.setText("85");
+            if (tvSleepHours != null) tvSleepHours.setText("7h24");
+            if (tvStepsCount != null) tvStepsCount.setText("6 542");
+            if (tvWaterCount != null) tvWaterCount.setText("4/8");
+            if (tvRdvCount != null) tvRdvCount.setText("2");
+            if (tvMedCount != null) tvMedCount.setText("3");
+            if (tvOrdoCount != null) tvOrdoCount.setText("5");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            android.util.Log.e("FragmentHome", "Erreur chargement données: " + e.getMessage());
         }
     }
 

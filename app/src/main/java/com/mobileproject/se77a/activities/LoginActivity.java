@@ -56,17 +56,20 @@ public class LoginActivity extends AppCompatActivity {
             User user = userRepository.login(email, hashedPassword);
 
             if (user != null) {
-                // Succès : L'utilisateur existe en base !
+                // Sauvegarder le nom pour l'affichage dans FragmentHome
+                getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        .edit()
+                        .putString("current_user_name", user.getNom())
+                        .apply();
+
                 Toast.makeText(this, "Connexion réussie ! Bienvenue " + user.getNom(), Toast.LENGTH_SHORT).show();
 
                 Intent intent = new Intent(this, MainActivity.class);
-                // Optionnel : passer le nom à la MainActivity pour l'afficher
-                intent.putExtra("USER_NAME", user.getNom());
                 startActivity(intent);
                 finish();
             } else {
                 // Échec : Email ou mot de passe incorrect
-                Toast.makeText(this, "Email ou mot de passe incorrect", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Utilisateur non trouvé. Essayez de vous ré-inscrire (Base de données mise à jour)", Toast.LENGTH_LONG).show();
             }
         });
 
