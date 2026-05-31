@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:fillViewport="true"
     android:background="@drawable/bg_bottom_sheet">
 
     <LinearLayout
@@ -27,8 +28,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nouveau médicament"
-            android:textColor="@color/white"
+            android:text="@string/add_medication_title"
+            android:textColor="@color/blue_dark_1"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="20dp" />
@@ -37,8 +38,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nom du médicament"
-            android:textColor="@color/blue_light_1"
+            android:text="@string/med_name_label"
+            android:textColor="@color/blue_medium"
             android:textSize="12sp"
             android:letterSpacing="0.05"
             android:layout_marginBottom="6dp" />
@@ -50,8 +51,8 @@
             android:layout_marginBottom="16dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxStrokeColor="@color/blue_medium"
-            app:boxBackgroundColor="#0D018ABE"
-            app:hintTextColor="@color/blue_light_1"
+            app:boxBackgroundColor="@color/blue_light_2"
+            app:hintTextColor="@color/blue_medium"
             app:boxCornerRadiusTopStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
@@ -61,8 +62,8 @@
                 android:id="@+id/et_med_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ex: Amoxicilline"
-                android:textColor="@color/white"
+                android:hint="@string/med_name_hint"
+                android:textColor="@color/blue_dark_1"
                 android:textColorHint="@color/gray_text"
                 android:inputType="textCapSentences" />
 
@@ -72,8 +73,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dosage"
-            android:textColor="@color/blue_light_1"
+            android:text="@string/dosage_label"
+            android:textColor="@color/blue_medium"
             android:textSize="12sp"
             android:letterSpacing="0.05"
             android:layout_marginBottom="6dp" />
@@ -85,10 +86,10 @@
             android:layout_marginBottom="16dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             app:boxStrokeColor="@color/blue_medium"
-            app:boxBackgroundColor="#0D018ABE"
-            app:hintTextColor="@color/blue_light_1"
+            app:boxBackgroundColor="@color/blue_light_2"
+            app:hintTextColor="@color/blue_medium"
             app:suffixText="mg"
-            app:suffixTextColor="@color/blue_light_1"
+            app:suffixTextColor="@color/blue_medium"
             app:boxCornerRadiusTopStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
@@ -98,8 +99,8 @@
                 android:id="@+id/et_dosage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Ex: 500"
-                android:textColor="@color/white"
+                android:hint="@string/dosage_hint"
+                android:textColor="@color/blue_dark_1"
                 android:textColorHint="@color/gray_text"
                 android:inputType="numberDecimal" />
 
@@ -109,8 +110,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fréquence"
-            android:textColor="@color/blue_light_1"
+            android:text="@string/frequency_label"
+            android:textColor="@color/blue_medium"
             android:textSize="12sp"
             android:letterSpacing="0.05"
             android:layout_marginBottom="6dp" />
@@ -122,8 +123,8 @@
             android:layout_marginBottom="16dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             app:boxStrokeColor="@color/blue_medium"
-            app:boxBackgroundColor="#0D018ABE"
-            app:hintTextColor="@color/blue_light_1"
+            app:boxBackgroundColor="@color/blue_light_2"
+            app:hintTextColor="@color/blue_medium"
             app:boxCornerRadiusTopStart="12dp"
             app:boxCornerRadiusTopEnd="12dp"
             app:boxCornerRadiusBottomStart="12dp"
@@ -133,8 +134,8 @@
                 android:id="@+id/actv_frequency"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Sélectionner la fréquence"
-                android:textColor="@color/white"
+                android:hint="@string/frequency_hint"
+                android:textColor="@color/blue_dark_1"
                 android:textColorHint="@color/gray_text"
                 android:inputType="none"
                 android:focusable="false" />
@@ -145,8 +146,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Heure(s) de prise"
-            android:textColor="@color/blue_light_1"
+            android:text="@string/intake_time_label"
+            android:textColor="@color/blue_medium"
             android:textSize="12sp"
             android:letterSpacing="0.05"
             android:layout_marginBottom="6dp" />
@@ -175,9 +176,88 @@
                 android:text="+"
                 android:textSize="20sp"
                 android:padding="0dp"
+                android:contentDescription="@string/add_time_desc"
                 style="@style/Widget.MaterialComponents.Button"
                 app:backgroundTint="@color/blue_medium"
                 app:cornerRadius="10dp" />
+
+        </LinearLayout>
+
+        <!-- ── Durée du traitement ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/treatment_duration_label"
+            android:textColor="@color/blue_medium"
+            android:textSize="12sp"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="6dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:layout_marginBottom="16dp">
+
+            <!-- Date de début -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_date_start"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/blue_medium"
+                app:boxBackgroundColor="@color/blue_light_2"
+                app:hintTextColor="@color/blue_medium"
+                app:startIconDrawable="@drawable/ic_calendar"
+                app:startIconTint="@color/blue_medium"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_date_start"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/start_date_hint"
+                    android:textColor="@color/blue_dark_1"
+                    android:textColorHint="@color/gray_text"
+                    android:focusable="false"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Date de fin -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_date_end"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                app:boxStrokeColor="@color/blue_medium"
+                app:boxBackgroundColor="@color/blue_light_2"
+                app:hintTextColor="@color/blue_medium"
+                app:startIconDrawable="@drawable/ic_calendar"
+                app:startIconTint="@color/blue_medium"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_date_end"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/end_date_hint"
+                    android:textColor="@color/blue_dark_1"
+                    android:textColorHint="@color/gray_text"
+                    android:focusable="false"
+                    android:inputType="none" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 
@@ -185,8 +265,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forme"
-            android:textColor="@color/blue_light_1"
+            android:text="@string/form_label"
+            android:textColor="@color/blue_medium"
             android:textSize="12sp"
             android:letterSpacing="0.05"
             android:layout_marginBottom="10dp" />
@@ -203,9 +283,8 @@
                 android:id="@+id/chip_tablet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💊 Comprimé"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/blue_dark_1"
+                android:text="@string/tablet_choice"
+                android:textColor="@color/blue_dark_1"
                 app:chipStrokeColor="@color/blue_medium"
                 app:chipStrokeWidth="1dp"
                 app:checkedIconTint="@color/blue_medium"
@@ -215,9 +294,8 @@
                 android:id="@+id/chip_syrup"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🍶 Sirop"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/blue_dark_1"
+                android:text="@string/syrup_choice"
+                android:textColor="@color/blue_dark_1"
                 app:chipStrokeColor="@color/blue_medium"
                 app:chipStrokeWidth="1dp"
                 app:checkedIconTint="@color/blue_medium"
@@ -227,9 +305,8 @@
                 android:id="@+id/chip_injection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💉 Injection"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/blue_dark_1"
+                android:text="@string/injection_choice"
+                android:textColor="@color/blue_dark_1"
                 app:chipStrokeColor="@color/blue_medium"
                 app:chipStrokeWidth="1dp"
                 app:checkedIconTint="@color/blue_medium"
@@ -239,15 +316,52 @@
                 android:id="@+id/chip_drops"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💧 Gouttes"
-                android:textColor="@color/white"
-                app:chipBackgroundColor="@color/blue_dark_1"
+                android:text="@string/drops_choice"
+                android:textColor="@color/blue_dark_1"
                 app:chipStrokeColor="@color/blue_medium"
                 app:chipStrokeWidth="1dp"
                 app:checkedIconTint="@color/blue_medium"
                 style="@style/Widget.MaterialComponents.Chip.Choice" />
 
         </com.google.android.material.chip.ChipGroup>
+
+        <!-- ── Instructions ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/instructions_label"
+            android:textColor="@color/blue_medium"
+            android:textSize="12sp"
+            android:letterSpacing="0.05"
+            android:layout_marginBottom="6dp" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_notes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            app:boxStrokeColor="@color/blue_medium"
+            app:boxBackgroundColor="@color/blue_light_2"
+            app:hintTextColor="@color/blue_medium"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_notes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/instructions_hint"
+                android:textColor="@color/blue_dark_1"
+                android:textColorHint="@color/gray_text"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="2"
+                android:maxLines="4"
+                android:gravity="top" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <!-- ── Activer rappel ── -->
         <LinearLayout
@@ -268,15 +382,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Activer les rappels"
-                    android:textColor="@color/white"
+                    android:text="@string/enable_reminders_label"
+                    android:textColor="@color/blue_dark_1"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Notification à chaque heure de prise"
+                    android:text="@string/reminder_notif_desc"
                     android:textColor="@color/gray_text"
                     android:textSize="12sp"
                     android:layout_marginTop="2dp" />
@@ -288,6 +402,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
+                android:contentDescription="@string/reminder_switch_desc"
                 android:thumbTint="@color/blue_medium"
                 android:trackTint="#40018ABE" />
 
@@ -305,7 +420,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:layout_marginEnd="10dp"
-                android:text="Annuler"
+                android:text="@string/cancel_button"
                 android:textColor="@color/blue_light_1"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 app:strokeColor="@color/blue_medium"
@@ -316,9 +431,11 @@
                 android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
-                android:text="Ajouter"
+                android:text="@string/add_button"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                android:enabled="false"
+                android:alpha="0.5"
                 style="@style/Widget.MaterialComponents.Button"
                 app:backgroundTint="@color/blue_medium"
                 app:cornerRadius="14dp" />

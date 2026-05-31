@@ -1,5 +1,29 @@
 <resources>
     <string name="app_name">se77a</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_medication_title">Nouveau médicament</string>
+    <string name="med_name_label">Nom du médicament</string>
+    <string name="med_name_hint">Ex: Amoxicilline</string>
+    <string name="dosage_label">Dosage</string>
+    <string name="dosage_hint">Ex: 500</string>
+    <string name="frequency_label">Fréquence</string>
+    <string name="frequency_hint">Sélectionner la fréquence</string>
+    <string name="intake_time_label">Heure(s) de prise</string>
+    <string name="add_time_desc">Ajouter une heure de prise</string>
+    <string name="treatment_duration_label">Durée du traitement</string>
+    <string name="start_date_hint">Début</string>
+    <string name="start_date_desc">Date de début du traitement</string>
+    <string name="end_date_hint">Fin</string>
+    <string name="end_date_desc">Date de fin du traitement</string>
+    <string name="form_label">Forme</string>
+    <string name="tablet_choice">💊 Comprimé</string>
+    <string name="syrup_choice">🍶 Sirop</string>
+    <string name="injection_choice">💉 Injection</string>
+    <string name="drops_choice">💧 Gouttes</string>
+    <string name="instructions_label">Instructions (optionnel)</string>
+    <string name="instructions_hint">Ex: À prendre avec les repas</string>
+    <string name="enable_reminders_label">Activer les rappels</string>
+    <string name="reminder_notif_desc">Notification à chaque heure de prise</string>
+    <string name="reminder_switch_desc">Activer ou désactiver les rappels</string>
+    <string name="cancel_button">Annuler</string>
+    <string name="add_button">Ajouter</string>
 </resources>

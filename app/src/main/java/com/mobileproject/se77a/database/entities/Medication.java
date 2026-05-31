@@ -15,9 +15,10 @@ public class Medication {
     public String startDate;
     public String endDate;
     public String reminderTime;
+    public String takenTimes;    // New: List of times already taken today (comma separated)
     public String type;          // tablet | syrup | injection | drops
     public boolean isActive;
-    public boolean takenToday;   // ← NEW: resets daily, drives the progress bar
+    public boolean takenToday;   // resets daily, true if all doses taken
 
     public Medication(String name, String dosage, String frequency,
                       String startDate, String endDate, String reminderTime, String type) {
@@ -30,5 +31,6 @@ public class Medication {
         this.type         = type;
         this.isActive     = true;
         this.takenToday   = false;
+        this.takenTimes   = "";
     }
 }

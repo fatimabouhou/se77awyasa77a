@@ -87,14 +87,22 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
             // ── Text ───────────────────────────────────────────────────────
             tvName.setText(med.name);
-            tvDosage.setText(med.dosage + " · " + med.frequency);
-            tvNextDose.setText(med.reminderTime != null && !med.reminderTime.isEmpty()
-                    ? "Prochaine prise : " + med.reminderTime
-                    : "Prise si besoin");
+            
+            // Format dosage with type: "500 mg · Comprimé · 3×/jour"
+            String typeLabel = resolveTypeLabel(med.type);
+            tvDosage.setText(med.dosage + " · " + typeLabel + " · " + med.frequency);
+            
+            // --- Next Dose Calculation ---
+            String nextDose = resolveNextDose(med);
+            if (med.takenToday) {
+                tvNextDose.setText("Toutes les prises faites ✓");
+            } else {
+                tvNextDose.setText(nextDose.equals("--:--") ? "Prise si besoin" : "Prochaine prise : " + nextDose);
+            }
 
             // ── Status badge ───────────────────────────────────────────────
             if (med.takenToday) {
-                tvBadge.setText("Pris ✓");
+                tvBadge.setText("Terminé ✓");
                 tvBadge.setBackgroundResource(R.drawable.bg_badge_taken);
             } else if (med.isActive) {
                 tvBadge.setText("Actif");
@@ -106,10 +114,10 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
             // ── Type icon ──────────────────────────────────────────────────
             switch (med.type == null ? "tablet" : med.type) {
-                case "syrup":     ivIcon.setImageResource(android.R.drawable.ic_menu_manage);    break;
-                case "injection": ivIcon.setImageResource(android.R.drawable.ic_menu_edit);      break;
-                case "drops":     ivIcon.setImageResource(android.R.drawable.ic_menu_zoom);      break;
-                default:          ivIcon.setImageResource(android.R.drawable.ic_menu_info_details);
+                case "syrup":     ivIcon.setImageResource(R.drawable.medicine);    break;
+                case "injection": ivIcon.setImageResource(R.drawable.sering);      break;
+                case "drops":     ivIcon.setImageResource(R.drawable.pellule);     break;
+                default:          ivIcon.setImageResource(R.drawable.pellule); // tablet use pellule
             }
 
             // ── Active switch (silent set to avoid callback loop) ──────────
@@ -121,7 +129,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             // ── Mark taken button ──────────────────────────────────────────
             btnMarkTaken.setEnabled(!med.takenToday);
             btnMarkTaken.setAlpha(med.takenToday ? 0.4f : 1f);
-            btnMarkTaken.setText(med.takenToday ? "✓ Pris" : "Pris ✓");
+            btnMarkTaken.setText(med.takenToday ? "✓ Pris" : "Marquer pris");
             btnMarkTaken.setOnClickListener(v -> listener.onMarkTaken(med));
 
             // ── Long press → reveal photo / call row ───────────────────────
@@ -138,6 +146,34 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
             // ── Card click ─────────────────────────────────────────────────
             itemView.setOnClickListener(v -> listener.onMedicationClick(med));
+        }
+
+        private String resolveTypeLabel(String type) {
+            if (type == null) return "Comprimé";
+            switch (type) {
+                case "syrup":     return "Sirop";
+                case "injection": return "Injection";
+                case "drops":     return "Gouttes";
+                default:          return "Comprimé";
+            }
+        }
+
+        private String resolveNextDose(Medication med) {
+            if (med.reminderTime == null || med.reminderTime.isEmpty()) return "--:--";
+            String[] allTimes = med.reminderTime.split(",");
+            String[] takenTimes = (med.takenTimes != null && !med.takenTimes.isEmpty()) ? med.takenTimes.split(",") : new String[0];
+
+            for (String time : allTimes) {
+                boolean alreadyTaken = false;
+                for (String taken : takenTimes) {
+                    if (time.trim().equals(taken.trim())) {
+                        alreadyTaken = true;
+                        break;
+                    }
+                }
+                if (!alreadyTaken) return time.trim();
+            }
+            return "Terminé";
         }
     }
 }
