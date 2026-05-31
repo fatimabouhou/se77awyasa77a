@@ -18,6 +18,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.fragments.FragmentMap;
 
 public class FragmentTracking extends Fragment {
 
@@ -190,12 +191,11 @@ public class FragmentTracking extends Fragment {
     }
 
     private void openMaps() {
-        Uri uri = Uri.parse("geo:0,0?q=pharmacie+de+garde");
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(getContext(), "🗺️ Installez Google Maps", Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new FragmentMap())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
