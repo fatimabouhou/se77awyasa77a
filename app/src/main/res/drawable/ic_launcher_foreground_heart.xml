@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer Glow Circles (Optional but nice) -->
+    <path
+        android:pathData="M54,54m-35,0a35,35 0,1 1,70 0a35,35 0,1 1,-70 0"
+        android:fillColor="#10018ABE"/>
+    <path
+        android:pathData="M54,54m-28,0a28,28 0,1 1,56 0a28,28 0,1 1,-56 0"
+        android:fillColor="#20018ABE"/>
+
+    <!-- The Heart -->
+    <path
+        android:pathData="M54,84.4L50.4,81.1C37.5,69.4 29,61.7 29,52.2C29,44 35.4,37.6 43.6,37.6C48.2,37.6 52.6,39.8 55.4,43.2C58.2,39.8 62.6,37.6 67.2,37.6C75.4,37.6 81.8,44 81.8,52.2C81.8,61.7 73.3,69.4 60.4,81.1L56.8,84.4H54Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="29"
+                android:startY="37"
+                android:endX="81"
+                android:endY="84"
+                android:type="linear">
+                <item android:offset="0" android:color="#018ABE"/>
+                <item android:offset="1" android:color="#007AFF"/>
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- The Plus Sign -->
+    <path
+        android:pathData="M61,54h-6v-6h-2v6h-6v2h6v6h2v-6h6z"
+        android:fillColor="#FFFFFF"/>
+</vector>

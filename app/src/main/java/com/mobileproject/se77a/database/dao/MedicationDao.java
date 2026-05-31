@@ -10,7 +10,7 @@ public interface MedicationDao {
 
     // ── Writes ─────────────────────────────────────────────────────────────
     @Insert
-    void insert(Medication medication);
+    long insert(Medication medication);
 
     @Update
     void update(Medication medication);

@@ -1,8 +1,12 @@
 package com.mobileproject.se77a.fragments;
 
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,9 +21,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +42,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mobileproject.se77a.R;
 import com.mobileproject.se77a.adapters.MedicationAdapter;
 import com.mobileproject.se77a.database.entities.Medication;
+import com.mobileproject.se77a.utils.TimeUtils;
 import com.mobileproject.se77a.viewmodels.MedicationViewModel;
 
 import java.text.SimpleDateFormat;
@@ -81,6 +89,42 @@ public class FragmentMedications extends Fragment
         setupViewModel();
         setupFilterTabs();
         fabAdd.setOnClickListener(v -> showAddMedicationSheet());
+
+        // Sequential permission check to avoid Activity interruption
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.POST_NOTIFICATIONS) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            } else {
+                checkExactAlarmPermission();
+            }
+        } else {
+            checkExactAlarmPermission();
+        }
+    }
+
+    private void checkNotificationPermission() {
+        // Method now empty as logic moved to onViewCreated for better flow
+    }
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(getContext(), "Notifications activées", Toast.LENGTH_SHORT).show();
+                }
+                // Check alarm permission after notification permission is handled
+                checkExactAlarmPermission();
+            });
+
+    private void checkExactAlarmPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            android.app.AlarmManager alarmManager = (android.app.AlarmManager) requireContext().getSystemService(Context.ALARM_SERVICE);
+            if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
+                Intent intent = new Intent(android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+                Toast.makeText(getContext(), "Veuillez autoriser les alarmes pour recevoir les rappels", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     private void bindViews(View root) {
@@ -281,13 +325,13 @@ public class FragmentMedications extends Fragment
 
         v.findViewById(R.id.btn_add_time).setOnClickListener(x ->
                 new TimePickerDialog(requireContext(), (tp, h, m) -> {
-                    String time = String.format(Locale.getDefault(), "%02d:%02d", h, m);
-                    if (!selectedTimes.contains(time)) {
-                        selectedTimes.add(time);
-                        addTimeChip(chipTimes, time, validator);
+                    String time24h = String.format(Locale.getDefault(), "%02d:%02d", h, m);
+                    if (!selectedTimes.contains(time24h)) {
+                        selectedTimes.add(time24h);
+                        addTimeChip(chipTimes, time24h, validator);
                         validator.run();
                     }
-                }, 8, 0, true).show()
+                }, 8, 0, android.text.format.DateFormat.is24HourFormat(requireContext())).show()
         );
 
         v.findViewById(R.id.btn_cancel).setOnClickListener(x -> sheet.dismiss());
@@ -333,12 +377,12 @@ public class FragmentMedications extends Fragment
         }, year, month, day).show();
     }
 
-    private void addTimeChip(ChipGroup group, String time, Runnable onRemove) {
+    private void addTimeChip(ChipGroup group, String time24h, Runnable onRemove) {
         Chip chip = new Chip(requireContext());
-        chip.setText(time);
+        chip.setText(TimeUtils.formatTimeForDisplay(requireContext(), time24h));
         chip.setCloseIconVisible(true);
         chip.setOnCloseIconClickListener(c -> {
-            selectedTimes.remove(time);
+            selectedTimes.remove(time24h);
             group.removeView(chip);
             if (onRemove != null) onRemove.run();
         });

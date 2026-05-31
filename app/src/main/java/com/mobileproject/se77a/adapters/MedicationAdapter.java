@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.button.MaterialButton;
 import com.mobileproject.se77a.R;
 import com.mobileproject.se77a.database.entities.Medication;
+import com.mobileproject.se77a.utils.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,10 +95,12 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             
             // --- Next Dose Calculation ---
             String nextDose = resolveNextDose(med);
+            String displayTime = TimeUtils.formatTimeForDisplay(ctx, nextDose);
+            
             if (med.takenToday) {
                 tvNextDose.setText("Toutes les prises faites ✓");
             } else {
-                tvNextDose.setText(nextDose.equals("--:--") ? "Prise si besoin" : "Prochaine prise : " + nextDose);
+                tvNextDose.setText(nextDose.equals("--:--") ? "Prise si besoin" : "Prochaine prise : " + displayTime);
             }
 
             // ── Status badge ───────────────────────────────────────────────

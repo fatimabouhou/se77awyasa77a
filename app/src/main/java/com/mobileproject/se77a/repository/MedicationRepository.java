@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import com.mobileproject.se77a.database.AppDatabase;
 import com.mobileproject.se77a.database.dao.MedicationDao;
 import com.mobileproject.se77a.database.entities.Medication;
+import com.mobileproject.se77a.utils.ReminderManager;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -15,6 +16,7 @@ public class MedicationRepository {
 
     private final MedicationDao    medicationDao;
     private final ExecutorService  executor;
+    private final ReminderManager  reminderManager;
 
     // LiveData exposed to ViewModel
     private final LiveData<List<Medication>> allMedications;
@@ -26,6 +28,7 @@ public class MedicationRepository {
         AppDatabase db = AppDatabase.getInstance(application);
         medicationDao         = db.medicationDao();
         executor              = Executors.newSingleThreadExecutor();
+        reminderManager       = new ReminderManager(application);
 
         allMedications        = medicationDao.getAllMedications();
         activeMedications     = medicationDao.getActiveMedications();
@@ -41,15 +44,31 @@ public class MedicationRepository {
 
     // ── Writes (must run off the main thread) ──────────────────────────────
     public void insert(Medication medication) {
-        executor.execute(() -> medicationDao.insert(medication));
+        executor.execute(() -> {
+            long id = medicationDao.insert(medication);
+            medication.id = (int) id;
+            if (medication.isActive) {
+                reminderManager.scheduleMedicationAlarm(medication);
+            }
+        });
     }
 
     public void update(Medication medication) {
-        executor.execute(() -> medicationDao.update(medication));
+        executor.execute(() -> {
+            medicationDao.update(medication);
+            if (medication.isActive) {
+                reminderManager.scheduleMedicationAlarm(medication);
+            } else {
+                reminderManager.cancelMedicationAlarms(medication);
+            }
+        });
     }
 
     public void delete(Medication medication) {
-        executor.execute(() -> medicationDao.delete(medication));
+        executor.execute(() -> {
+            medicationDao.delete(medication);
+            reminderManager.cancelMedicationAlarms(medication);
+        });
     }
 
     public void markAsTaken(int medicationId) {
