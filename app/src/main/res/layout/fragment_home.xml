@@ -78,14 +78,11 @@
 
         </RelativeLayout>
 
-        <!-- ===== CARTE PROCHAIN RDV ===== -->
+        <!-- ===== RÉSUMÉ DU JOUR ===== -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_next_rdv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:clickable="true"
-            android:focusable="true"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
             app:cardBackgroundColor="#185FA5">
@@ -99,269 +96,329 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="PROCHAIN RENDEZ-VOUS"
+                    android:text="RÉSUMÉ DU JOUR"
                     android:textColor="#B5D4F4"
                     android:textSize="9sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.07"
-                    android:layout_marginBottom="6dp"/>
+                    android:layout_marginBottom="12dp"/>
 
-                <!-- Nom + spécialité -->
-                <TextView
-                    android:id="@+id/tv_next_doctor"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Aucun rendez-vous"
-                    android:textColor="#FFFFFF"
-                    android:textSize="17sp"
-                    android:textStyle="bold"/>
+                    android:orientation="horizontal"
+                    android:weightSum="3">
 
-                <TextView
-                    android:id="@+id/tv_next_specialty"
-                    android:layout_width="wrap_content"
+                    <!-- Médicaments pris -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_stat_white_alpha"
+                        android:layout_marginEnd="6dp"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_med_progress"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0/0"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Médicaments"
+                            android:textColor="#B5D4F4"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <!-- Prochain RDV -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_stat_white_alpha"
+                        android:layout_marginEnd="6dp"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_rdv_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="RDV ce mois"
+                            android:textColor="#B5D4F4"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                    <!-- Ordonnances -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_stat_white_alpha"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_ordo_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ordonnances"
+                            android:textColor="#B5D4F4"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- ===== ALERTES DU JOUR ===== -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ALERTES DU JOUR"
+            android:textColor="#85B7EB"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.07"
+            android:layout_marginBottom="8dp"/>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_alertes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Alerte médicament -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="#B5D4F4"
-                    android:textSize="13sp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="14dp"/>
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
 
-                <!-- Badge countdown + bouton détails -->
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/bg_dot_orange"
+                        android:layout_marginEnd="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Médicament à prendre"
+                            android:textColor="#042C53"
+                            android:textSize="12sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tv_alerte_med_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Prochain rappel : Soir 20h00"
+                            android:textColor="#85B7EB"
+                            android:textSize="11sp"
+                            android:layout_marginTop="1dp"/>
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_alerte_med_heure"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="20:00"
+                        android:textColor="#854F0B"
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:background="@drawable/bg_badge_orange_light"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
+                </LinearLayout>
+
+                <!-- Séparateur -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EEF5FB"
+                    android:layout_marginBottom="12dp"/>
+
+                <!-- Alerte RDV -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical">
 
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/bg_dot_blue"
+                        android:layout_marginEnd="10dp"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_alerte_rdv_doctor"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Aucun rendez-vous"
+                            android:textColor="#042C53"
+                            android:textSize="12sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:id="@+id/tv_alerte_rdv_specialty"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="#85B7EB"
+                            android:textSize="11sp"
+                            android:layout_marginTop="1dp"/>
+                    </LinearLayout>
+
                     <TextView
-                        android:id="@+id/tv_countdown"
+                        android:id="@+id/tv_alerte_rdv_countdown"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
-                        android:textColor="#FFFFFF"
-                        android:textSize="11sp"
+                        android:textColor="#185FA5"
+                        android:textSize="10sp"
                         android:textStyle="bold"
-                        android:background="@drawable/bg_badge_white_alpha"
+                        android:background="@drawable/bg_badge_blue_light"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/btn_voir_suivi"
-                        android:layout_width="wrap_content"
-                        android:layout_height="32dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp"
-                        app:cardBackgroundColor="#FFFFFF">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="Voir détails"
-                            android:textColor="#185FA5"
-                            android:textSize="11sp"
-                            android:textStyle="bold"
-                            android:gravity="center"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"/>
-                    </androidx.cardview.widget.CardView>
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"/>
                 </LinearLayout>
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- ===== STATS : MÉDICAMENTS + ORDONNANCES ===== -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- ===== CONSEIL SANTÉ DU JOUR ===== -->
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="16dp">
+            android:text="CONSEIL SANTÉ DU JOUR"
+            android:textColor="#85B7EB"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.07"
+            android:layout_marginBottom="8dp"/>
 
-            <!-- Médicaments -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_medications"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="18dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#FFFFFF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="MÉDICAMENTS"
-                        android:textColor="#85B7EB"
-                        android:textSize="9sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.06"
-                        android:layout_marginBottom="6dp"/>
-
-                    <TextView
-                        android:id="@+id/tv_med_progress"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0/0"
-                        android:textColor="#042C53"
-                        android:textSize="26sp"
-                        android:textStyle="bold"
-                        android:includeFontPadding="false"
-                        android:layout_marginBottom="8dp"/>
-
-                    <!-- Badge prochain rappel -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_blue_light"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp">
-
-                        <TextView
-                            android:id="@+id/tv_next_med_reminder"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Aucun rappel"
-                            android:textColor="#185FA5"
-                            android:textSize="10sp"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Ordonnances -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/card_ordonnances"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:clickable="true"
-                android:focusable="true"
-                app:cardCornerRadius="18dp"
-                app:cardElevation="0dp"
-                app:cardBackgroundColor="#FFFFFF">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="14dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="ORDONNANCES"
-                        android:textColor="#85B7EB"
-                        android:textSize="9sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.06"
-                        android:layout_marginBottom="6dp"/>
-
-                    <TextView
-                        android:id="@+id/tv_ordo_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="#042C53"
-                        android:textSize="26sp"
-                        android:textStyle="bold"
-                        android:includeFontPadding="false"
-                        android:layout_marginBottom="8dp"/>
-
-                    <!-- Badge statut -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_green_light"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp"
-                        android:paddingTop="5dp"
-                        android:paddingBottom="5dp">
-
-                        <TextView
-                            android:id="@+id/tv_ordo_status"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="À jour"
-                            android:textColor="#3B6D11"
-                            android:textSize="10sp"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-
-        <!-- ===== BOUTON SUIVI COMPLET ===== -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/btn_suivi_complet"
+            android:id="@+id/card_conseil"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:clickable="true"
-            android:focusable="true"
-            app:cardCornerRadius="18dp"
+            app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="#042C53">
+            app:cardBackgroundColor="#FFFFFF">
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:padding="16dp">
 
+                <!-- Icône -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="14dp"
+                    app:cardCornerRadius="22dp"
+                    app:cardElevation="0dp"
+                    app:cardBackgroundColor="#E6F1FB">
+
+                    <ImageView
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_notification"
+                        app:tint="#185FA5"
+                        android:contentDescription="Conseil"/>
+                </androidx.cardview.widget.CardView>
+
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_alignParentStart="true"
+                    android:layout_weight="1"
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_conseil_titre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Suivi complet"
-                        android:textColor="#FFFFFF"
-                        android:textSize="14sp"
-                        android:textStyle="bold"/>
+                        android:text="Hydratation"
+                        android:textColor="#042C53"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_conseil_texte"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="RDV · Médicaments · Services"
+                        android:text="Pensez à boire 1,5L d'eau par jour, surtout en période de chaleur."
                         android:textColor="#85B7EB"
                         android:textSize="11sp"
-                        android:layout_marginTop="2dp"/>
+                        android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/ic_arrow_right"
-                    app:tint="#85B7EB"/>
-            </RelativeLayout>
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
     </LinearLayout>
