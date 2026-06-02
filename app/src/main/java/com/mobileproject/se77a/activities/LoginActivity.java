@@ -3,6 +3,7 @@ package com.mobileproject.se77a.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -57,8 +58,10 @@ public class LoginActivity extends AppCompatActivity {
 
             if (user != null) {
                 // Sauvegarder le nom pour l'affichage dans FragmentHome
-                getSharedPreferences("user_prefs", MODE_PRIVATE)
-                        .edit()
+                SharedPreferences prefs =
+                        getSharedPreferences("user_prefs", MODE_PRIVATE);
+
+                prefs.edit()
                         .putString("current_user_name", user.getNom())
                         .apply();
 
