@@ -40,6 +40,7 @@ public class MedicationViewModel extends AndroidViewModel {
     public void update(Medication medication)  { repository.update(medication); }
     public void delete(Medication medication)  { repository.delete(medication); }
 
-    public void markAsTaken(int medicationId) { repository.markAsTaken(medicationId); }
-    public void resetAllTakenToday()          { repository.resetAllTakenToday(); }
+    public void markAsTaken(int medicationId, String takenTimes, boolean takenToday) {
+        repository.updateTakenTimes(medicationId, takenTimes, takenToday);
+    }    public void resetAllTakenToday()          { repository.resetAllTakenToday(); }
 }

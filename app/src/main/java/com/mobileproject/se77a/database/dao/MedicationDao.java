@@ -29,10 +29,17 @@ public interface MedicationDao {
     LiveData<Medication> getMedicationById(int id);
 
     // ── takenToday helpers ─────────────────────────────────────────────────
-    @Query("UPDATE medications SET takenToday = 1 WHERE id = :id")
-    void markAsTaken(int id);
 
-    @Query("UPDATE medications SET takenToday = 0")
+    // Marque un médicament comme entièrement pris (toutes ses doses)
+    @Query("UPDATE medications SET takenToday = 1, takenTimes = reminderTime WHERE id = :id")
+    void markAsTakenFull(int id);
+
+    // Mise à jour dose par dose (depuis FragmentTracking)
+    @Query("UPDATE medications SET takenTimes = :takenTimes, takenToday = :takenToday WHERE id = :id")
+    void updateTakenTimes(int id, String takenTimes, boolean takenToday);
+
+    // Reset quotidien : remet tout à zéro
+    @Query("UPDATE medications SET takenToday = 0, takenTimes = ''")
     void resetAllTakenToday();
 
     @Query("SELECT COUNT(*) FROM medications WHERE isActive = 1")

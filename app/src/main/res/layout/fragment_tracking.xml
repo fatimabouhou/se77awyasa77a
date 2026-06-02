@@ -186,11 +186,13 @@
                         android:background="?android:attr/selectableItemBackground">
 
                         <View
+                            android:id="@+id/view_morning_indicator"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
-                            android:background="@drawable/bg_med_checked"/>
+                            android:background="@drawable/bg_med_pending"/>
 
                         <TextView
+                            android:id="@+id/tv_morning_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="08:00"
@@ -219,11 +221,13 @@
                         android:background="?android:attr/selectableItemBackground">
 
                         <View
+                            android:id="@+id/view_noon_indicator"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
-                            android:background="@drawable/bg_med_checked"/>
+                            android:background="@drawable/bg_med_pending"/>
 
                         <TextView
+                            android:id="@+id/tv_noon_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="12:00"
@@ -252,11 +256,13 @@
                         android:background="?android:attr/selectableItemBackground">
 
                         <View
+                            android:id="@+id/view_evening_indicator"
                             android:layout_width="56dp"
                             android:layout_height="56dp"
                             android:background="@drawable/bg_med_pending"/>
 
                         <TextView
+                            android:id="@+id/tv_evening_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="20:00"
@@ -287,7 +293,7 @@
                     style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
-                    android:progress="66"
+                    android:progress="0"
                     android:progressTint="@color/blue_medium"
                     android:progressBackgroundTint="@color/blue_light_1"/>
             </LinearLayout>

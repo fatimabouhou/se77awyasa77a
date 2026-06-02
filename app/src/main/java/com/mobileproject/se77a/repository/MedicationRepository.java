@@ -1,6 +1,9 @@
 package com.mobileproject.se77a.repository;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import androidx.lifecycle.LiveData;
 
 import com.mobileproject.se77a.database.AppDatabase;
@@ -8,15 +11,19 @@ import com.mobileproject.se77a.database.dao.MedicationDao;
 import com.mobileproject.se77a.database.entities.Medication;
 import com.mobileproject.se77a.utils.ReminderManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MedicationRepository {
 
-    private final MedicationDao    medicationDao;
-    private final ExecutorService  executor;
-    private final ReminderManager  reminderManager;
+    private final MedicationDao   medicationDao;
+    private final ExecutorService executor;
+    private final ReminderManager reminderManager;
+    private final Application     application;
 
     // LiveData exposed to ViewModel
     private final LiveData<List<Medication>> allMedications;
@@ -25,24 +32,25 @@ public class MedicationRepository {
     private final LiveData<Integer>          takenTodayCount;
 
     public MedicationRepository(Application application) {
-        AppDatabase db = AppDatabase.getInstance(application);
-        medicationDao         = db.medicationDao();
-        executor              = Executors.newSingleThreadExecutor();
-        reminderManager       = new ReminderManager(application);
+        this.application          = application;
+        AppDatabase db            = AppDatabase.getInstance(application);
+        medicationDao             = db.medicationDao();
+        executor                  = Executors.newSingleThreadExecutor();
+        reminderManager           = new ReminderManager(application);
 
-        allMedications        = medicationDao.getAllMedications();
-        activeMedications     = medicationDao.getActiveMedications();
-        activeMedicationCount = medicationDao.getActiveMedicationCount();
-        takenTodayCount       = medicationDao.getTakenTodayCount();
+        allMedications            = medicationDao.getAllMedications();
+        activeMedications         = medicationDao.getActiveMedications();
+        activeMedicationCount     = medicationDao.getActiveMedicationCount();
+        takenTodayCount           = medicationDao.getTakenTodayCount();
     }
 
-    // ── Getters (LiveData — no thread needed, Room handles it) ─────────────
+    // ── Getters (LiveData) ─────────────────────────────────────────────────
     public LiveData<List<Medication>> getAllMedications()    { return allMedications; }
     public LiveData<List<Medication>> getActiveMedications() { return activeMedications; }
     public LiveData<Integer> getActiveMedicationCount()      { return activeMedicationCount; }
     public LiveData<Integer> getTakenTodayCount()            { return takenTodayCount; }
 
-    // ── Writes (must run off the main thread) ──────────────────────────────
+    // ── Writes ─────────────────────────────────────────────────────────────
     public void insert(Medication medication) {
         executor.execute(() -> {
             long id = medicationDao.insert(medication);
@@ -71,8 +79,33 @@ public class MedicationRepository {
         });
     }
 
+    // Marque toutes les doses d'un médicament comme prises
     public void markAsTaken(int medicationId) {
-        executor.execute(() -> medicationDao.markAsTaken(medicationId));
+        executor.execute(() -> medicationDao.markAsTakenFull(medicationId));
+    }
+
+    // Mise à jour dose par dose (depuis FragmentTracking)
+    public void updateTakenTimes(int medicationId, String takenTimes, boolean takenToday) {
+        executor.execute(() ->
+                medicationDao.updateTakenTimes(medicationId, takenTimes, takenToday)
+        );
+    }
+
+    // Reset quotidien automatique
+    public void resetIfNewDay() {
+        executor.execute(() -> {
+            SharedPreferences prefs = application
+                    .getSharedPreferences("med_prefs", Context.MODE_PRIVATE);
+
+            String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    .format(new Date());
+            String lastReset = prefs.getString("last_reset_date", "");
+
+            if (!today.equals(lastReset)) {
+                medicationDao.resetAllTakenToday();
+                prefs.edit().putString("last_reset_date", today).apply();
+            }
+        });
     }
 
     public void resetAllTakenToday() {
