@@ -26,4 +26,6 @@
     <string name="reminder_switch_desc">Activer ou désactiver les rappels</string>
     <string name="cancel_button">Annuler</string>
     <string name="add_button">Ajouter</string>
+    <string name="health_tip_default_title">Conseil Santé</string>
+    <string name="health_tip_loading">Chargement de votre conseil personnalisé...</string>
 </resources>

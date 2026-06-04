@@ -60,7 +60,22 @@ public class FragmentHome extends Fragment {
         setupViewModels();
         displayUserInfo();
         displayDate();
-        displayConseil();
+
+        // CHARGEMENT DU CONSEIL SANTE UNIQUEMENT SUR LA HOME
+        if (savedInstanceState == null) {
+            getChildFragmentManager().beginTransaction()
+                    .replace(R.id.health_tip_container, new FragmentHealthTip())
+                    .commit();
+            
+            // Graphique des visites
+            try {
+                getChildFragmentManager().beginTransaction()
+                        .replace(R.id.chart_container, new FragmentVisitsChart())
+                        .commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     // ── Bind ───────────────────────────────────────────────────────────────
@@ -76,8 +91,6 @@ public class FragmentHome extends Fragment {
         tvAlerteRdvDoctor     = root.findViewById(R.id.tv_alerte_rdv_doctor);
         tvAlerteRdvSpecialty  = root.findViewById(R.id.tv_alerte_rdv_specialty);
         tvAlerteRdvCountdown  = root.findViewById(R.id.tv_alerte_rdv_countdown);
-        tvConseilTitre        = root.findViewById(R.id.tv_conseil_titre);
-        tvConseilTexte        = root.findViewById(R.id.tv_conseil_texte);
     }
 
     // ── ViewModels ─────────────────────────────────────────────────────────
@@ -185,14 +198,5 @@ public class FragmentHome extends Fragment {
             date = date.substring(0, 1).toUpperCase(Locale.getDefault()) + date.substring(1);
         }
         tvDate.setText(date);
-    }
-
-    // ── Conseil du jour ───────────────────────────────────────────────────
-    private void displayConseil() {
-        // Index basé sur le jour de l'année pour rotation stable
-        int dayOfYear = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_YEAR);
-        String[] conseil = CONSEILS[dayOfYear % CONSEILS.length];
-        tvConseilTitre.setText(conseil[0]);
-        tvConseilTexte.setText(conseil[1]);
     }
 }
