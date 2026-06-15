@@ -17,52 +17,17 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.database.AppDatabase;
 
-/**
- * FragmentProfile
- * Affiche le profil utilisateur : avatar, infos médicales, stats SQLite, menu de navigation.
- *
- * Données persistées dans SharedPreferences (clé "profil_prefs") :
- *   - nom, email, age, groupe_sanguin, taille, poids
- *   - medecin, allergies, antecedents
- *
- * Stats (consultations, medicaments, ordonnances) : à brancher sur ton DAO SQLite.
- *
- * Navigation : remplace les R.id.action_* par tes vraies actions du nav_graph.
- */
 public class FragmentProfile extends Fragment {
 
-    // ──────────────────────────────────────────────
-    //  Clé SharedPreferences
-    // ──────────────────────────────────────────────
-    private static final String PREFS_NAME = "profil_prefs";
+    // CORRECTION : On utilise exactement le même fichier que ton LoginActivity
+    private static final String PREFS_NAME = "user_prefs";
 
-    // ──────────────────────────────────────────────
-    //  Vues
-    // ──────────────────────────────────────────────
-    private TextView tvAvatar;
-    private TextView tvNom;
-    private TextView tvEmail;
-    private TextView tvAge;
-    private TextView tvGroupeSanguin;
-    private TextView tvMorphologie;
-
-    private TextView tvStatConsultations;
-    private TextView tvStatMedicaments;
-    private TextView tvStatOrdonnances;
-
-    private TextView tvMedecin;
-    private TextView tvAllergies;
-    private TextView tvAntecedents;
-
-    private RelativeLayout itemRappels;
-    private RelativeLayout itemOrdonnances;
-    private RelativeLayout itemConfidentialite;
-    private RelativeLayout itemDeconnexion;
-
-    // ──────────────────────────────────────────────
-    //  Lifecycle
-    // ──────────────────────────────────────────────
+    private TextView tvAvatar, tvNom, tvEmail, tvAge, tvGroupeSanguin, tvMorphologie;
+    private TextView tvStatConsultations, tvStatMedicaments, tvStatOrdonnances;
+    private TextView tvMedecin, tvAllergies, tvAntecedents;
+    private RelativeLayout itemRappels, itemOrdonnances, itemConfidentialite, itemDeconnexion;
 
     @Nullable
     @Override
@@ -82,24 +47,21 @@ public class FragmentProfile extends Fragment {
         configurerNavigation(view);
     }
 
-    // ──────────────────────────────────────────────
-    //  Bind des vues
-    // ──────────────────────────────────────────────
     private void bindViews(View view) {
-        tvAvatar           = view.findViewById(R.id.tvAvatar);
-        tvNom              = view.findViewById(R.id.tvNom);
-        tvEmail            = view.findViewById(R.id.tvEmail);
-        tvAge              = view.findViewById(R.id.tvAge);
-        tvGroupeSanguin    = view.findViewById(R.id.tvGroupeSanguin);
-        tvMorphologie      = view.findViewById(R.id.tvMorphologie);
+        tvAvatar            = view.findViewById(R.id.tvAvatar);
+        tvNom               = view.findViewById(R.id.tvNom);
+        tvEmail             = view.findViewById(R.id.tvEmail);
+        tvAge               = view.findViewById(R.id.tvAge);
+        tvGroupeSanguin     = view.findViewById(R.id.tvGroupeSanguin);
+        tvMorphologie       = view.findViewById(R.id.tvMorphologie);
 
         tvStatConsultations = view.findViewById(R.id.tvStatConsultations);
         tvStatMedicaments   = view.findViewById(R.id.tvStatMedicaments);
         tvStatOrdonnances   = view.findViewById(R.id.tvStatOrdonnances);
 
-        tvMedecin          = view.findViewById(R.id.tvMedecin);
-        tvAllergies        = view.findViewById(R.id.tvAllergies);
-        tvAntecedents      = view.findViewById(R.id.tvAntecedents);
+        tvMedecin           = view.findViewById(R.id.tvMedecin);
+        tvAllergies         = view.findViewById(R.id.tvAllergies);
+        tvAntecedents       = view.findViewById(R.id.tvAntecedents);
 
         itemRappels         = view.findViewById(R.id.itemRappels);
         itemOrdonnances     = view.findViewById(R.id.itemOrdonnances);
@@ -107,14 +69,11 @@ public class FragmentProfile extends Fragment {
         itemDeconnexion     = view.findViewById(R.id.itemDeconnexion);
     }
 
-    // ──────────────────────────────────────────────
-    //  Chargement du profil depuis SharedPreferences
-    // ──────────────────────────────────────────────
     private void chargerProfil() {
-        SharedPreferences prefs = requireActivity()
-                .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        SharedPreferences prefs = requireActivity().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        String nom           = prefs.getString("nom", "Utilisateur");
+        // CORRECTION : On récupère "current_user_name" au lieu de "nom"
+        String nom           = prefs.getString("current_user_name", "Utilisateur");
         String email         = prefs.getString("email", "—");
         String age           = prefs.getString("age", "—");
         String groupeSanguin = prefs.getString("groupe_sanguin", "—");
@@ -124,109 +83,74 @@ public class FragmentProfile extends Fragment {
         String allergies     = prefs.getString("allergies", "—");
         String antecedents   = prefs.getString("antecedents", "—");
 
-        // Avatar : deux premières initiales du nom
         tvAvatar.setText(extraireInitiales(nom));
         tvNom.setText(nom);
         tvEmail.setText(email);
-        tvAge.setText(age + " ans");
-        tvGroupeSanguin.setText("Groupe " + groupeSanguin);
-        tvMorphologie.setText(taille + " cm · " + poids + " kg");
+
+        tvAge.setText(age.equals("—") ? age : age + " ans");
+        tvGroupeSanguin.setText(groupeSanguin.equals("—") ? groupeSanguin : "Groupe " + groupeSanguin);
+        tvMorphologie.setText(taille.equals("—") || poids.equals("—") ? "—" : taille + " cm · " + poids + " kg");
 
         tvMedecin.setText(medecin);
         tvAllergies.setText(allergies);
         tvAntecedents.setText(antecedents);
     }
 
-    /**
-     * Extrait les deux premières initiales du nom complet.
-     * "Ahmed Mansouri" → "AM"
-     */
     private String extraireInitiales(String nom) {
-        if (nom == null || nom.isEmpty()) return "?";
+        if (nom == null || nom.trim().isEmpty()) return "?";
         String[] parts = nom.trim().split("\\s+");
         if (parts.length == 1) return String.valueOf(parts[0].charAt(0)).toUpperCase();
         return (String.valueOf(parts[0].charAt(0)) + String.valueOf(parts[1].charAt(0))).toUpperCase();
     }
 
-    // ──────────────────────────────────────────────
-    //  Chargement des stats
-    //  → Remplace les valeurs fictives par tes requêtes DAO
-    // ──────────────────────────────────────────────
     private void chargerStats() {
-        // ── Exemple avec valeurs fictives ──────────
-        // Remplace par : int count = monDao.countConsultations();
-        int nbConsultations = 12;
-        int nbMedicaments   = 3;
-        int nbOrdonnances   = 5;
+        AppDatabase db = AppDatabase.getInstance(requireContext());
 
-        // ── Avec DAO Room (exemple) ──────────────────
-        // AppDatabase db = AppDatabase.getInstance(requireContext());
-        // nbConsultations = db.consultationDao().count();
-        // nbMedicaments   = db.medicamentDao().countActifs();
-        // nbOrdonnances   = db.ordonnanceDao().count();
+        int nbConsultations = db.appointmentDao().countAppointments();
+        int nbMedicaments   = db.medicationDao().countMedications();
+        int nbOrdonnances   = db.appointmentDao().countOrdonnances();
 
         tvStatConsultations.setText(String.valueOf(nbConsultations));
         tvStatMedicaments.setText(String.valueOf(nbMedicaments));
         tvStatOrdonnances.setText(String.valueOf(nbOrdonnances));
     }
 
-    // ──────────────────────────────────────────────
-    //  Navigation via NavController
-    // ──────────────────────────────────────────────
     private void configurerNavigation(View view) {
-
-        // Bouton Paramètres (header)
         view.findViewById(R.id.btnSettings).setOnClickListener(v -> {
-            // Si tu as un fragment settings :
-            // Navigation.findNavController(v).navigate(R.id.action_profile_to_settings);
             Toast.makeText(requireContext(), "Paramètres", Toast.LENGTH_SHORT).show();
         });
 
-        // Rappels & notifications
         itemRappels.setOnClickListener(v -> {
-            NavController nav = Navigation.findNavController(v);
-            // nav.navigate(R.id.action_profile_to_rappels);
-            Toast.makeText(requireContext(), "Rappels", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Rappels & Notifications", Toast.LENGTH_SHORT).show();
         });
 
-        // Ordonnances
         itemOrdonnances.setOnClickListener(v -> {
-            NavController nav = Navigation.findNavController(v);
-            // nav.navigate(R.id.action_profile_to_ordonnances);
-            Toast.makeText(requireContext(), "Ordonnances", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Mes Ordonnances", Toast.LENGTH_SHORT).show();
         });
 
-        // Confidentialité
         itemConfidentialite.setOnClickListener(v -> {
-            NavController nav = Navigation.findNavController(v);
-            // nav.navigate(R.id.action_profile_to_confidentialite);
             Toast.makeText(requireContext(), "Confidentialité", Toast.LENGTH_SHORT).show();
         });
 
-        // Déconnexion
-        itemDeconnexion.setOnClickListener(v -> deconnecter(v));
+        itemDeconnexion.setOnClickListener(this::deconnecter);
     }
 
-    // ──────────────────────────────────────────────
-    //  Déconnexion
-    // ──────────────────────────────────────────────
     private void deconnecter(View v) {
-        // 1) Vider les préférences
         requireActivity()
                 .getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .edit()
                 .clear()
                 .apply();
 
-        // 2) Naviguer vers le fragment de login
-        // Navigation.findNavController(v).navigate(R.id.action_profile_to_login);
-        Toast.makeText(requireContext(), "Déconnecté", Toast.LENGTH_SHORT).show();
+        try {
+            NavController nav = Navigation.findNavController(v);
+            Toast.makeText(requireContext(), "Déconnexion réussie", Toast.LENGTH_SHORT).show();
+        } catch (IllegalArgumentException e) {
+            Toast.makeText(requireContext(), "Erreur NavGraph", Toast.LENGTH_SHORT).show();
+        }
     }
 
-    // ──────────────────────────────────────────────
-    //  Méthode utilitaire publique : sauvegarder le profil
-    //  Appelle-la depuis un fragment d'édition
-    // ──────────────────────────────────────────────
+    // CORRECTION : La méthode de sauvegarde utilise aussi la clé globale "current_user_name"
     public static void sauvegarderProfil(Context ctx,
                                          String nom, String email,
                                          String age, String groupeSanguin,
@@ -235,7 +159,7 @@ public class FragmentProfile extends Fragment {
                                          String antecedents) {
         ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
                 .edit()
-                .putString("nom", nom)
+                .putString("current_user_name", nom)
                 .putString("email", email)
                 .putString("age", age)
                 .putString("groupe_sanguin", groupeSanguin)

@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@color/blue_light_2">
 
-    <!-- Header background -->
     <View
         android:id="@+id/viewHeader"
         android:layout_width="match_parent"
@@ -74,7 +73,6 @@
                     android:textColor="@color/blue_dark_1"
                     android:layout_marginBottom="24dp"/>
 
-                <!-- Nom -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,7 +98,6 @@
                     android:imeOptions="actionNext"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Email -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -126,7 +123,150 @@
                     android:imeOptions="actionNext"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Password -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Âge"
+                            android:textSize="12sp"
+                            android:textColor="@color/blue_dark_2"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito_bold"
+                            android:layout_marginBottom="6dp"/>
+                        <EditText
+                            android:id="@+id/etAge"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:hint="Ex: 25"
+                            android:inputType="number"
+                            android:fontFamily="@font/nunito_bold"
+                            android:background="@drawable/input_bg"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark_1"
+                            android:textColorHint="@color/gray_text"
+                            android:imeOptions="actionNext"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Groupe Sanguin"
+                            android:textSize="12sp"
+                            android:textColor="@color/blue_dark_2"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito_bold"
+                            android:layout_marginBottom="6dp"/>
+                        <EditText
+                            android:id="@+id/etGroupeSanguin"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:hint="Ex: O+"
+                            android:inputType="textCapCharacters"
+                            android:fontFamily="@font/nunito_bold"
+                            android:background="@drawable/input_bg"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark_1"
+                            android:textColorHint="@color/gray_text"
+                            android:imeOptions="actionNext"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:baselineAligned="false"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Taille (cm)"
+                            android:textSize="12sp"
+                            android:textColor="@color/blue_dark_2"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito_bold"
+                            android:layout_marginBottom="6dp"/>
+                        <EditText
+                            android:id="@+id/etTaille"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:hint="Ex: 175"
+                            android:inputType="number"
+                            android:fontFamily="@font/nunito_bold"
+                            android:background="@drawable/input_bg"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark_1"
+                            android:textColorHint="@color/gray_text"
+                            android:imeOptions="actionNext"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Poids (kg)"
+                            android:textSize="12sp"
+                            android:textColor="@color/blue_dark_2"
+                            android:textStyle="bold"
+                            android:fontFamily="@font/nunito_bold"
+                            android:layout_marginBottom="6dp"/>
+                        <EditText
+                            android:id="@+id/etPoids"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:hint="Ex: 70"
+                            android:inputType="number"
+                            android:fontFamily="@font/nunito_bold"
+                            android:background="@drawable/input_bg"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:textSize="14sp"
+                            android:textColor="@color/blue_dark_1"
+                            android:textColorHint="@color/gray_text"
+                            android:imeOptions="actionNext"/>
+                    </LinearLayout>
+                </LinearLayout>
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -152,7 +292,6 @@
                     android:imeOptions="actionNext"
                     android:layout_marginBottom="16dp"/>
 
-                <!-- Confirm Password -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

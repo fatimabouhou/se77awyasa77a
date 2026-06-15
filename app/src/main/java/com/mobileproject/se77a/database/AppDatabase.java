@@ -24,7 +24,7 @@ import com.mobileproject.se77a.models.User;
                 TimeSlot.class,
                 Appointment.class
         },
-        version = 5,              // 4 → 5
+        version = 6,              // MIGRATION : On passe de 5 à 6 pour intégrer l'âge, le poids, etc.
         exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {
@@ -44,7 +44,7 @@ public abstract class AppDatabase extends RoomDatabase {
                             AppDatabase.class,
                             "healthtracker_room.db"
                     )
-                    .fallbackToDestructiveMigration()  // garde ton approche existante
+                    .fallbackToDestructiveMigration()  // Grâce à cette ligne, Room va recréer la table proprement en version 6 !
                     .allowMainThreadQueries()
                     .build();
         }

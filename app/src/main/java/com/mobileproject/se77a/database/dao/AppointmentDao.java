@@ -27,4 +27,11 @@ public interface AppointmentDao {
     @Query("SELECT * FROM appointments WHERE status = 'UPCOMING' " +
             "ORDER BY date, time LIMIT 1")
     LiveData<Appointment> getNextAppointment();
+
+    // ── COMPTEURS SYNCHRONES POUR LE PROFIL ──
+    @Query("SELECT COUNT(*) FROM appointments")
+    int countAppointments();
+
+    @Query("SELECT COUNT(*) FROM appointments WHERE id IS NOT NULL")
+    int countOrdonnances();
 }

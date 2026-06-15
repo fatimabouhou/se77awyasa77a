@@ -29,7 +29,8 @@ public interface MedicationDao {
     LiveData<Medication> getMedicationById(int id);
 
     // ── takenToday helpers ─────────────────────────────────────────────────
-
+    @Query("SELECT COUNT(*) FROM medications")
+    int countMedications();
     // Marque un médicament comme entièrement pris (toutes ses doses)
     @Query("UPDATE medications SET takenToday = 1, takenTimes = reminderTime WHERE id = :id")
     void markAsTakenFull(int id);
