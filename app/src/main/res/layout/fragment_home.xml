@@ -205,6 +205,20 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- CONTAINER POUR LE CONSEIL SANTE DYNAMIQUE -->
+        <FrameLayout
+            android:id="@+id/health_tip_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Graphique des visites -->
+        <FrameLayout
+            android:id="@+id/chart_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp" />
+
         <!-- ===== ALERTES DU JOUR ===== -->
         <TextView
             android:layout_width="wrap_content"
@@ -342,80 +356,6 @@
                         android:paddingEnd="10dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"/>
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- ===== CONSEIL SANTÉ DU JOUR ===== -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CONSEIL SANTÉ DU JOUR"
-            android:textColor="#85B7EB"
-            android:textSize="9sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.07"
-            android:layout_marginBottom="8dp"/>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_conseil"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:padding="16dp">
-
-                <!-- Icône -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
-                    android:layout_marginEnd="14dp"
-                    app:cardCornerRadius="22dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="#E6F1FB">
-
-                    <ImageView
-                        android:layout_width="22dp"
-                        android:layout_height="22dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_notification"
-                        app:tint="#185FA5"
-                        android:contentDescription="Conseil"/>
-                </androidx.cardview.widget.CardView>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/tv_conseil_titre"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hydratation"
-                        android:textColor="#042C53"
-                        android:textSize="13sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="4dp"/>
-
-                    <TextView
-                        android:id="@+id/tv_conseil_texte"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Pensez à boire 1,5L d'eau par jour, surtout en période de chaleur."
-                        android:textColor="#85B7EB"
-                        android:textSize="11sp"
-                        android:lineSpacingExtra="2dp"/>
                 </LinearLayout>
 
             </LinearLayout>
