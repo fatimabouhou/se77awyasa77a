@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.database.entities.Appointment;
 import com.mobileproject.se77a.database.entities.Medication;
 import com.mobileproject.se77a.viewmodels.HomeViewModel;
-import com.mobileproject.se77a.viewmodels.MedicationViewModel;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,21 +29,8 @@ public class FragmentHome extends Fragment {
     private TextView tvMedProgress, tvRdvCount, tvOrdoCount;
     private TextView tvAlerteMedDetail, tvAlerteMedHeure;
     private TextView tvAlerteRdvDoctor, tvAlerteRdvSpecialty, tvAlerteRdvCountdown;
-    private TextView tvConseilTitre, tvConseilTexte;
 
     private HomeViewModel       homeViewModel;
-    private MedicationViewModel medicationViewModel;
-
-    // ── Conseils santé du jour (rotatifs par index du jour) ───────────────
-    private static final String[][] CONSEILS = {
-            {"Hydratation",       "Pensez à boire 1,5 L d'eau par jour, surtout en période de chaleur."},
-            {"Activité physique", "30 minutes de marche par jour réduisent les risques cardiovasculaires."},
-            {"Sommeil",           "7 à 9 heures de sommeil sont recommandées pour un adulte en bonne santé."},
-            {"Alimentation",      "Favorisez les fruits et légumes frais à chaque repas de la journée."},
-            {"Stress",            "Pratiquez 5 minutes de respiration profonde pour réduire votre stress."},
-            {"Posture",           "Pensez à vous lever et vous étirer toutes les heures si vous êtes assis."},
-            {"Médicaments",       "Prenez vos médicaments à heure fixe pour maximiser leur efficacité."},
-    };
 
     @Nullable
     @Override
@@ -66,15 +53,6 @@ public class FragmentHome extends Fragment {
             getChildFragmentManager().beginTransaction()
                     .replace(R.id.health_tip_container, new FragmentHealthTip())
                     .commit();
-            
-            // Graphique des visites
-            try {
-                getChildFragmentManager().beginTransaction()
-                        .replace(R.id.chart_container, new FragmentVisitsChart())
-                        .commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -97,15 +75,10 @@ public class FragmentHome extends Fragment {
     private void setupViewModels() {
         // MODIFICATION ICI : On utilise requireActivity() au lieu de this
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
-        medicationViewModel = new ViewModelProvider(requireActivity()).get(MedicationViewModel.class);
 
-        // Résumé médicaments (Optimisé pour éviter le bug du 0/0)
-        homeViewModel.activeMedCount.observe(getViewLifecycleOwner(), active -> {
-            updateProgressText(homeViewModel.takenTodayCount.getValue(), active);
-        });
-
-        homeViewModel.takenTodayCount.observe(getViewLifecycleOwner(), taken -> {
-            updateProgressText(taken, homeViewModel.activeMedCount.getValue());
+        // Résumé médicaments : Progrès en doses (Même logique que Tracking)
+        homeViewModel.getMedProgressText().observe(getViewLifecycleOwner(), text -> {
+            tvMedProgress.setText(text);
         });
 
         // RDV & ordonnances
@@ -115,16 +88,24 @@ public class FragmentHome extends Fragment {
         homeViewModel.getOrdoCount().observe(getViewLifecycleOwner(),
                 count -> tvOrdoCount.setText(String.valueOf(count != null ? count : 0)));
 
+        // Alerte : prochain rendez-vous
+        homeViewModel.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
+            if (appt != null) {
+                tvAlerteRdvDoctor.setText(appt.doctorName);
+                tvAlerteRdvSpecialty.setText(appt.specialty);
+                tvAlerteRdvCountdown.setText(appt.time);
+                tvAlerteRdvCountdown.setVisibility(View.VISIBLE);
+            } else {
+                tvAlerteRdvDoctor.setText("Aucun rendez-vous");
+                tvAlerteRdvSpecialty.setText("Planifiez votre suivi");
+                tvAlerteRdvCountdown.setVisibility(View.GONE);
+            }
+        });
+
         // Alerte : prochain médicament actif non pris
         homeViewModel.activeMedications.observe(getViewLifecycleOwner(), this::updateMedAlert);
     }
 
-    // AJOUTE cette petite méthode d'aide juste en dessous de setupViewModels
-    private void updateProgressText(Integer taken, Integer active) {
-        int t = (taken != null) ? taken : 0;
-        int a = (active != null) ? active : 0;
-        tvMedProgress.setText(String.format(Locale.getDefault(), "%d/%d", t, a));
-    }
     // ── Alerte médicament ──────────────────────────────────────────────────
     /**
      * Trouve le prochain rappel parmi les médicaments actifs non pris aujourd'hui
@@ -137,7 +118,6 @@ public class FragmentHome extends Fragment {
             return;
         }
 
-        String nowHHmm = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
         String nextMedName = null;
         String nextTime    = null;
 
@@ -145,12 +125,19 @@ public class FragmentHome extends Fragment {
             if (med.takenToday) continue;
             if (med.reminderTime == null || med.reminderTime.isEmpty()) continue;
 
-            for (String t : med.reminderTime.split(",")) {
+            String[] allDoses = med.reminderTime.split(",");
+            String takenStr = (med.takenTimes != null) ? med.takenTimes : "";
+            
+            for (String t : allDoses) {
                 String time = t.trim();
-                // Prendre le premier horaire >= maintenant
-                if (nextTime == null || compareTime(time, nowHHmm) >= 0 &&
-                        (compareTime(time, nextTime) < 0)) {
-                    nextTime    = time;
+                if (time.isEmpty()) continue;
+
+                // Si cette dose est déjà prise, on passe à la suivante
+                if (takenStr.contains(time)) continue;
+
+                // On cherche la dose la plus ancienne parmi celles qui restent à prendre aujourd'hui
+                if (nextTime == null || compareTime(time, nextTime) < 0) {
+                    nextTime = time;
                     nextMedName = med.name;
                 }
             }

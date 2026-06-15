@@ -295,6 +295,9 @@ public class FragmentTracking extends Fragment {
                                 (slot.equals("Soir")  && hour >= 18);
 
                 if (correspondAuSlot && !takenList.contains(time)) {
+                    // Arrêter la notification si elle est active
+                    new com.mobileproject.se77a.utils.NotificationHelper(getContext()).cancelNotification(med.id);
+
                     takenList.add(time);
                     String newTakenTimes = String.join(",", takenList);
                     boolean toutPris = takenList.containsAll(Arrays.asList(scheduledTimes));

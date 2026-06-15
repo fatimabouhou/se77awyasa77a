@@ -27,4 +27,7 @@ public interface AppointmentDao {
     @Query("SELECT * FROM appointments WHERE status = 'UPCOMING' " +
             "ORDER BY date, time LIMIT 1")
     LiveData<Appointment> getNextAppointment();
+
+    @Query("SELECT COUNT(*) FROM appointments WHERE status = 'UPCOMING' AND date LIKE :monthPrefix || '%'")
+    LiveData<Integer> getCountForMonth(String monthPrefix);
 }

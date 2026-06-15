@@ -28,6 +28,9 @@ public interface MedicationDao {
     @Query("SELECT * FROM medications WHERE id = :id")
     LiveData<Medication> getMedicationById(int id);
 
+    @Query("SELECT * FROM medications WHERE id = :id")
+    Medication getMedicationByIdSync(int id);
+
     // ── takenToday helpers ─────────────────────────────────────────────────
 
     // Marque un médicament comme entièrement pris (toutes ses doses)

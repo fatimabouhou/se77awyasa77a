@@ -91,6 +91,47 @@ public class MedicationRepository {
         );
     }
 
+    public void markNextDoseAsTaken(int medId) {
+        executor.execute(() -> {
+            Medication med = medicationDao.getMedicationByIdSync(medId);
+            if (med == null) return;
+
+            if (med.reminderTime == null || med.reminderTime.isEmpty()) {
+                med.takenToday = true;
+                medicationDao.update(med);
+                return;
+            }
+
+            String[] allTimes = med.reminderTime.split(",");
+            String currentTaken = (med.takenTimes != null) ? med.takenTimes : "";
+            String[] takenArray = currentTaken.isEmpty() ? new String[0] : currentTaken.split(",");
+
+            String doseToMark = "";
+            for (String time : allTimes) {
+                boolean alreadyTaken = false;
+                for (String t : takenArray) {
+                    if (time.trim().equals(t.trim())) {
+                        alreadyTaken = true;
+                        break;
+                    }
+                }
+                if (!alreadyTaken) {
+                    doseToMark = time.trim();
+                    break;
+                }
+            }
+
+            if (!doseToMark.isEmpty()) {
+                String newTaken = currentTaken.isEmpty() ? doseToMark : currentTaken + "," + doseToMark;
+                med.takenTimes = newTaken;
+                if (newTaken.split(",").length >= allTimes.length) {
+                    med.takenToday = true;
+                }
+                medicationDao.update(med);
+            }
+        });
+    }
+
     // Reset quotidien automatique
     public void resetIfNewDay() {
         executor.execute(() -> {

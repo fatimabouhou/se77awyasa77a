@@ -64,6 +64,12 @@ public class AppointmentRepository {
         return appointmentDao.getNextAppointment();
     }
 
+    public LiveData<Integer> getCountThisMonth() {
+        String monthPrefix = new SimpleDateFormat("yyyy-MM", Locale.getDefault())
+                .format(new Date());
+        return appointmentDao.getCountForMonth(monthPrefix);
+    }
+
     // Cette méthode alimente directement le swiper horizontal du FragmentTracking
     public LiveData<List<Appointment>> getAllAppointments() {
         return appointmentDao.getAll();
