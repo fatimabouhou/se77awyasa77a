@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -72,18 +73,49 @@ public class FragmentTracking extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvNextAppointments.setLayoutManager(layoutManager);
 
-        // Initialisation de l'adapter avec écouteur de clic sur le bouton Détails
+        // Initialisation de l'adapter avec la boîte de dialogue (AlertDialog) pour les détails
         appointmentAdapter = new AppointmentAdapter(appt -> {
-            Toast.makeText(getContext(),
-                    "📋 " + appt.doctorName + " — " + appt.specialty +
-                            "\n📅 " + appt.date + " à " + appt.time +
-                            "\n📍 " + appt.address +
-                            "\n📞 " + appt.phone,
-                    Toast.LENGTH_LONG).show();
+            if (getContext() == null) return;
+
+            // 1. Création de la boîte de dialogue
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+
+            // 2. Configuration du titre et de l'icône de la boîte
+            builder.setTitle("Détails du Rendez-vous");
+            builder.setIcon(R.drawable.ic_calendar);
+
+            // 3. Construction du message détaillé
+            String message = "👨‍⚕️ " + appt.doctorName + "\n" +
+                    "🧠 Spécialité : " + appt.specialty + "\n\n" +
+                    "📅 Date : " + appt.date + "\n" +
+                    "⏰ Heure : " + appt.time + "\n\n" +
+                    "📍 Adresse : " + appt.address + "\n" +
+                    "📞 Téléphone : " + appt.phone;
+
+            builder.setMessage(message);
+
+            // 4. Bouton Fermer
+            builder.setPositiveButton("Fermer", (dialog, which) -> dialog.dismiss());
+
+            // 5. Bouton Appeler le cabinet
+            builder.setNegativeButton("Appeler le cabinet", (dialog, which) -> {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + appt.phone));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Impossible de passer l'appel", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            // 6. Affichage de la boîte à l'écran
+            AlertDialog dialog = builder.create();
+            dialog.show();
         });
+
         rvNextAppointments.setAdapter(appointmentAdapter);
 
-        // Ajout du SnapHelper pour effet d'aimantation par carte (effet Swiper)
+        // Ajout du SnapHelper pour l'effet de swiper fluide (aimantage carte par carte)
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvNextAppointments);
 
@@ -116,7 +148,7 @@ public class FragmentTracking extends Fragment {
     private void loadData() {
         if (getActivity() == null) return;
 
-        // ── RDV : Récupération de TOUS les prochains rendez-vous ───────────
+        // ── RDV : Récupération de TOUS les rendez-vous actifs ───────────────
         appointmentRepository = new AppointmentRepository(getActivity().getApplication());
         appointmentRepository.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
             if (appointments == null || appointments.isEmpty()) {
