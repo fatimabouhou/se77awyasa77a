@@ -18,13 +18,18 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.database.entities.Appointment;
 import com.mobileproject.se77a.database.entities.Medication;
+import com.mobileproject.se77a.repository.AppointmentRepository;
 import com.mobileproject.se77a.repository.MedicationRepository;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class FragmentTracking extends Fragment {
 
@@ -39,8 +44,9 @@ public class FragmentTracking extends Fragment {
     private View     viewMorningIndicator, viewNoonIndicator, viewEveningIndicator;
     private TextView tvMorningTime, tvNoonTime, tvEveningTime;
 
-    private MedicationRepository medicationRepository;
-    private List<Medication>     activeMedicationsList = new ArrayList<>();
+    private MedicationRepository  medicationRepository;
+    private AppointmentRepository appointmentRepository;
+    private List<Medication>      activeMedicationsList = new ArrayList<>();
 
     // ── Section 3 : Grille 8 services ─────────────────────────────────────
     private CardView cardAppointment, cardMap, cardPrescription, cardResults;
@@ -91,13 +97,26 @@ public class FragmentTracking extends Fragment {
 
     // ── Chargement des données ─────────────────────────────────────────────
     private void loadData() {
-        if (tvNextDoctor != null)    tvNextDoctor.setText("Dr. Ahmed Benali");
-        if (tvNextSpecialty != null) tvNextSpecialty.setText("Cardiologue");
-        if (tvNextDate != null)      tvNextDate.setText("Demain · 14h30");
-        if (tvCountdown != null)     tvCountdown.setText("dans 18h");
-
         if (getActivity() == null) return;
 
+        // ── RDV : données réelles depuis la DB ─────────────────────────────
+        appointmentRepository = new AppointmentRepository(getActivity().getApplication());
+
+        appointmentRepository.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
+            if (appt == null) {
+                if (tvNextDoctor != null)    tvNextDoctor.setText("Aucun rendez-vous");
+                if (tvNextSpecialty != null) tvNextSpecialty.setText("—");
+                if (tvNextDate != null)      tvNextDate.setText("—");
+                if (tvCountdown != null)     tvCountdown.setText("");
+            } else {
+                if (tvNextDoctor != null)    tvNextDoctor.setText(appt.doctorName);
+                if (tvNextSpecialty != null) tvNextSpecialty.setText(appt.specialty);
+                if (tvNextDate != null)      tvNextDate.setText(appt.date + " · " + appt.time);
+                if (tvCountdown != null)     tvCountdown.setText(computeCountdown(appt.date, appt.time));
+            }
+        });
+
+        // ── Médicaments ────────────────────────────────────────────────────
         medicationRepository = new MedicationRepository(getActivity().getApplication());
 
         // Reset automatique si nouveau jour
@@ -111,7 +130,27 @@ public class FragmentTracking extends Fragment {
         });
     }
 
-    // ── Logique UI principale ──────────────────────────────────────────────
+    // ── Calcul du countdown ────────────────────────────────────────────────
+    private String computeCountdown(String date, String time) {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+            Date apptDate = sdf.parse(date + " " + time);
+            if (apptDate == null) return "";
+
+            long diffMs = apptDate.getTime() - System.currentTimeMillis();
+            if (diffMs <= 0) return "maintenant";
+
+            long diffH = diffMs / 3_600_000;
+            if (diffH < 24) return "dans " + diffH + "h";
+
+            long diffJ = diffH / 24;
+            return "dans " + diffJ + "j";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    // ── Logique UI médicaments ─────────────────────────────────────────────
     private void updateMedicationUI(List<Medication> medications) {
 
         int totalDoses = 0, takenDoses = 0;
@@ -119,7 +158,6 @@ public class FragmentTracking extends Fragment {
         int midiTotal  = 0, midiPris  = 0;
         int soirTotal  = 0, soirPris  = 0;
 
-        // Listes des heures en attente (non prises) par créneau — triées
         List<String> morningPending = new ArrayList<>();
         List<String> noonPending    = new ArrayList<>();
         List<String> eveningPending = new ArrayList<>();
@@ -155,7 +193,6 @@ public class FragmentTracking extends Fragment {
             }
         }
 
-        // Tri pour afficher la prochaine heure en attente
         Collections.sort(morningPending);
         Collections.sort(noonPending);
         Collections.sort(eveningPending);
@@ -164,19 +201,15 @@ public class FragmentTracking extends Fragment {
         String firstNoon    = noonPending.isEmpty()    ? "" : noonPending.get(0);
         String firstEvening = eveningPending.isEmpty() ? "" : eveningPending.get(0);
 
-        // Mise à jour UI Matin
         updateSlotUI(viewMorningIndicator, tvMorningTime, cardMorning,
                 matinTotal, matinPris, firstMorning);
 
-        // Mise à jour UI Midi
         updateSlotUI(viewNoonIndicator, tvNoonTime, cardNoon,
                 midiTotal, midiPris, firstNoon);
 
-        // Mise à jour UI Soir
         updateSlotUI(viewEveningIndicator, tvEveningTime, cardEvening,
                 soirTotal, soirPris, firstEvening);
 
-        // ProgressBar globale
         if (progressMedication != null) {
             int percent = (totalDoses == 0) ? 0 : (takenDoses * 100) / totalDoses;
             progressMedication.setProgress(percent);
@@ -279,22 +312,26 @@ public class FragmentTracking extends Fragment {
 
     // ── 8 services ─────────────────────────────────────────────────────────
     private void showAppointmentDetails() {
-        Toast.makeText(getContext(),
-                "📋 Dr. Ahmed Benali - Cardiologue\n📅 Demain 14h30\n📍 Cabinet Médical Saint-Roch",
-                Toast.LENGTH_LONG).show();
+        if (appointmentRepository == null) return;
+        appointmentRepository.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
+            if (appt == null) {
+                Toast.makeText(getContext(),
+                        "Aucun rendez-vous à venir", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(),
+                        "📋 " + appt.doctorName + " — " + appt.specialty +
+                                "\n📅 " + appt.date + " à " + appt.time +
+                                "\n📍 " + appt.address +
+                                "\n📞 " + appt.phone,
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void takeAppointment() {
-        Intent intent = new Intent(Intent.ACTION_INSERT);
-        intent.setData(android.provider.CalendarContract.Events.CONTENT_URI);
-        intent.putExtra(android.provider.CalendarContract.Events.TITLE, "Consultation médicale");
-        intent.putExtra(android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                System.currentTimeMillis() + 86400000);
-        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(getContext(), "📅 Ouvrez l'application Calendrier",
-                    Toast.LENGTH_SHORT).show();
+        if (appointmentRepository != null) {
+            AppointmentBottomSheet sheet = new AppointmentBottomSheet(appointmentRepository);
+            sheet.show(getParentFragmentManager(), "appointment");
         }
     }
 
@@ -336,9 +373,13 @@ public class FragmentTracking extends Fragment {
     }
 
     private void callCabinet() {
-        Intent intent = new Intent(Intent.ACTION_DIAL);
-        intent.setData(Uri.parse("tel:0512345678"));
-        startActivity(intent);
+        if (appointmentRepository == null) return;
+        appointmentRepository.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
+            String phone = (appt != null && appt.phone != null) ? appt.phone : "0512345678";
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse("tel:" + phone));
+            startActivity(intent);
+        });
     }
 
     private void showHistory() {
