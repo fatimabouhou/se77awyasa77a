@@ -16,26 +16,27 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobileproject.se77a.R;
+import com.mobileproject.se77a.adapters.AppointmentAdapter;
 import com.mobileproject.se77a.database.entities.Appointment;
 import com.mobileproject.se77a.database.entities.Medication;
 import com.mobileproject.se77a.repository.AppointmentRepository;
 import com.mobileproject.se77a.repository.MedicationRepository;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class FragmentTracking extends Fragment {
 
-    // ── Section 1 : Rendez-vous ────────────────────────────────────────────
-    private TextView tvNextDoctor, tvNextSpecialty, tvNextDate, tvCountdown;
-    private CardView btnViewDetails;
+    // ── Section 1 : Rendez-vous (Carrousel Horizontal) ──────────────────────
+    private RecyclerView       rvNextAppointments;
+    private AppointmentAdapter appointmentAdapter;
 
     // ── Section 2 : Médicaments ────────────────────────────────────────────
     private LinearLayout cardMorning, cardNoon, cardEvening;
@@ -66,12 +67,27 @@ public class FragmentTracking extends Fragment {
 
     // ── Initialisation des vues ────────────────────────────────────────────
     private void initViews(View view) {
-        tvNextDoctor    = view.findViewById(R.id.tv_next_doctor);
-        tvNextSpecialty = view.findViewById(R.id.tv_next_specialty);
-        tvNextDate      = view.findViewById(R.id.tv_next_date);
-        tvCountdown     = view.findViewById(R.id.tv_countdown);
-        btnViewDetails  = view.findViewById(R.id.btn_voir_details);
+        // Configuration du Recycler View Horizontal pour les RDV
+        rvNextAppointments = view.findViewById(R.id.rv_next_appointments);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvNextAppointments.setLayoutManager(layoutManager);
 
+        // Initialisation de l'adapter avec écouteur de clic sur le bouton Détails
+        appointmentAdapter = new AppointmentAdapter(appt -> {
+            Toast.makeText(getContext(),
+                    "📋 " + appt.doctorName + " — " + appt.specialty +
+                            "\n📅 " + appt.date + " à " + appt.time +
+                            "\n📍 " + appt.address +
+                            "\n📞 " + appt.phone,
+                    Toast.LENGTH_LONG).show();
+        });
+        rvNextAppointments.setAdapter(appointmentAdapter);
+
+        // Ajout du SnapHelper pour effet d'aimantation par carte (effet Swiper)
+        PagerSnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(rvNextAppointments);
+
+        // Vues Médicaments
         cardMorning          = view.findViewById(R.id.card_morning);
         cardNoon             = view.findViewById(R.id.card_noon);
         cardEvening          = view.findViewById(R.id.card_evening);
@@ -85,6 +101,7 @@ public class FragmentTracking extends Fragment {
         tvNoonTime    = view.findViewById(R.id.tv_noon_time);
         tvEveningTime = view.findViewById(R.id.tv_evening_time);
 
+        // Vues Grille de services
         cardAppointment   = view.findViewById(R.id.card_appointment);
         cardMap           = view.findViewById(R.id.card_map);
         cardPrescription  = view.findViewById(R.id.card_prescription);
@@ -99,30 +116,20 @@ public class FragmentTracking extends Fragment {
     private void loadData() {
         if (getActivity() == null) return;
 
-        // ── RDV : données réelles depuis la DB ─────────────────────────────
+        // ── RDV : Récupération de TOUS les prochains rendez-vous ───────────
         appointmentRepository = new AppointmentRepository(getActivity().getApplication());
-
-        appointmentRepository.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
-            if (appt == null) {
-                if (tvNextDoctor != null)    tvNextDoctor.setText("Aucun rendez-vous");
-                if (tvNextSpecialty != null) tvNextSpecialty.setText("—");
-                if (tvNextDate != null)      tvNextDate.setText("—");
-                if (tvCountdown != null)     tvCountdown.setText("");
+        appointmentRepository.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
+            if (appointments == null || appointments.isEmpty()) {
+                rvNextAppointments.setVisibility(View.GONE);
             } else {
-                if (tvNextDoctor != null)    tvNextDoctor.setText(appt.doctorName);
-                if (tvNextSpecialty != null) tvNextSpecialty.setText(appt.specialty);
-                if (tvNextDate != null)      tvNextDate.setText(appt.date + " · " + appt.time);
-                if (tvCountdown != null)     tvCountdown.setText(computeCountdown(appt.date, appt.time));
+                rvNextAppointments.setVisibility(View.VISIBLE);
+                appointmentAdapter.setAppointments(appointments);
             }
         });
 
         // ── Médicaments ────────────────────────────────────────────────────
         medicationRepository = new MedicationRepository(getActivity().getApplication());
-
-        // Reset automatique si nouveau jour
         medicationRepository.resetIfNewDay();
-
-        // Observation des médicaments
         medicationRepository.getAllMedications().observe(getViewLifecycleOwner(), medications -> {
             if (medications == null) return;
             activeMedicationsList = medications;
@@ -130,29 +137,8 @@ public class FragmentTracking extends Fragment {
         });
     }
 
-    // ── Calcul du countdown ────────────────────────────────────────────────
-    private String computeCountdown(String date, String time) {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-            Date apptDate = sdf.parse(date + " " + time);
-            if (apptDate == null) return "";
-
-            long diffMs = apptDate.getTime() - System.currentTimeMillis();
-            if (diffMs <= 0) return "maintenant";
-
-            long diffH = diffMs / 3_600_000;
-            if (diffH < 24) return "dans " + diffH + "h";
-
-            long diffJ = diffH / 24;
-            return "dans " + diffJ + "j";
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     // ── Logique UI médicaments ─────────────────────────────────────────────
     private void updateMedicationUI(List<Medication> medications) {
-
         int totalDoses = 0, takenDoses = 0;
         int matinTotal = 0, matinPris = 0;
         int midiTotal  = 0, midiPris  = 0;
@@ -201,14 +187,9 @@ public class FragmentTracking extends Fragment {
         String firstNoon    = noonPending.isEmpty()    ? "" : noonPending.get(0);
         String firstEvening = eveningPending.isEmpty() ? "" : eveningPending.get(0);
 
-        updateSlotUI(viewMorningIndicator, tvMorningTime, cardMorning,
-                matinTotal, matinPris, firstMorning);
-
-        updateSlotUI(viewNoonIndicator, tvNoonTime, cardNoon,
-                midiTotal, midiPris, firstNoon);
-
-        updateSlotUI(viewEveningIndicator, tvEveningTime, cardEvening,
-                soirTotal, soirPris, firstEvening);
+        updateSlotUI(viewMorningIndicator, tvMorningTime, cardMorning, matinTotal, matinPris, firstMorning);
+        updateSlotUI(viewNoonIndicator, tvNoonTime, cardNoon, midiTotal, midiPris, firstNoon);
+        updateSlotUI(viewEveningIndicator, tvEveningTime, cardEvening, soirTotal, soirPris, firstEvening);
 
         if (progressMedication != null) {
             int percent = (totalDoses == 0) ? 0 : (takenDoses * 100) / totalDoses;
@@ -216,15 +197,12 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void updateSlotUI(View indicator, TextView timeView, LinearLayout card,
-                              int total, int pris, String firstTime) {
+    private void updateSlotUI(View indicator, TextView timeView, LinearLayout card, int total, int pris, String firstTime) {
         boolean hasDoses = total > 0;
         boolean allTaken = hasDoses && (pris == total);
 
         if (indicator != null) {
-            indicator.setBackgroundResource(allTaken
-                    ? R.drawable.bg_med_checked
-                    : R.drawable.bg_med_pending);
+            indicator.setBackgroundResource(allTaken ? R.drawable.bg_med_checked : R.drawable.bg_med_pending);
         }
         if (timeView != null) {
             timeView.setText(!firstTime.isEmpty() ? firstTime : "--:--");
@@ -236,7 +214,6 @@ public class FragmentTracking extends Fragment {
 
     // ── Gestionnaire des clics ─────────────────────────────────────────────
     private void setupClickListeners() {
-        if (btnViewDetails    != null) btnViewDetails.setOnClickListener(v -> showAppointmentDetails());
         if (cardAppointment   != null) cardAppointment.setOnClickListener(v -> takeAppointment());
         if (cardMap           != null) cardMap.setOnClickListener(v -> openMaps());
         if (cardPrescription  != null) cardPrescription.setOnClickListener(v -> takePrescriptionPhoto());
@@ -254,7 +231,6 @@ public class FragmentTracking extends Fragment {
     // ── Marquage dose par dose ─────────────────────────────────────────────
     private void markMedicationTaken(String slot) {
         if (medicationRepository == null) return;
-
         boolean doseTrouvee = false;
 
         for (Medication med : activeMedicationsList) {
@@ -278,8 +254,7 @@ public class FragmentTracking extends Fragment {
                     boolean toutPris = takenList.containsAll(Arrays.asList(scheduledTimes));
 
                     medicationRepository.updateTakenTimes(med.id, newTakenTimes, toutPris);
-                    Toast.makeText(getContext(),
-                            med.name + " · " + time + " ✓", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), med.name + " · " + time + " ✓", Toast.LENGTH_SHORT).show();
                     doseTrouvee = true;
                     break;
                 }
@@ -288,9 +263,7 @@ public class FragmentTracking extends Fragment {
         }
 
         if (!doseTrouvee) {
-            Toast.makeText(getContext(),
-                    "Toutes les doses du " + slot + " sont déjà prises ✓",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Toutes les doses du " + slot + " sont déjà prises ✓", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -310,24 +283,7 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    // ── 8 services ─────────────────────────────────────────────────────────
-    private void showAppointmentDetails() {
-        if (appointmentRepository == null) return;
-        appointmentRepository.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
-            if (appt == null) {
-                Toast.makeText(getContext(),
-                        "Aucun rendez-vous à venir", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getContext(),
-                        "📋 " + appt.doctorName + " — " + appt.specialty +
-                                "\n📅 " + appt.date + " à " + appt.time +
-                                "\n📍 " + appt.address +
-                                "\n📞 " + appt.phone,
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
+    // ── 8 services actions ──────────────────────────────────────────────────
     private void takeAppointment() {
         if (appointmentRepository != null) {
             AppointmentBottomSheet sheet = new AppointmentBottomSheet(appointmentRepository);
@@ -349,8 +305,7 @@ public class FragmentTracking extends Fragment {
         if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
             startActivity(intent);
         } else {
-            Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -358,24 +313,21 @@ public class FragmentTracking extends Fragment {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
             startActivity(intent);
-            Toast.makeText(getContext(), "📸 Prenez en photo vos résultats d'analyses",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "📸 Prenez en photo vos résultats d'analyses", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void medicationReminders() {
-        Toast.makeText(getContext(),
-                "💊 Paramètres des rappels médicaments",
-                Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "💊 Paramètres des rappels médicaments", Toast.LENGTH_LONG).show();
     }
 
     private void callCabinet() {
         if (appointmentRepository == null) return;
-        appointmentRepository.getNextAppointment().observe(getViewLifecycleOwner(), appt -> {
-            String phone = (appt != null && appt.phone != null) ? appt.phone : "0512345678";
+        appointmentRepository.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
+            String phone = (appointments != null && !appointments.isEmpty() && appointments.get(0).phone != null)
+                    ? appointments.get(0).phone : "0512345678";
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse("tel:" + phone));
             startActivity(intent);
@@ -389,8 +341,6 @@ public class FragmentTracking extends Fragment {
     }
 
     private void showNotifications() {
-        Toast.makeText(getContext(),
-                "🔔 Notifications activées\nRappel: Prendre vos médicaments dans 1h",
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "🔔 Notifications activées\nRappel: Prendre vos médicaments dans 1h", Toast.LENGTH_SHORT).show();
     }
 }

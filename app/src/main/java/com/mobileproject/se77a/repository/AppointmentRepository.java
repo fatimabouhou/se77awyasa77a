@@ -64,6 +64,7 @@ public class AppointmentRepository {
         return appointmentDao.getNextAppointment();
     }
 
+    // Cette méthode alimente directement le swiper horizontal du FragmentTracking
     public LiveData<List<Appointment>> getAllAppointments() {
         return appointmentDao.getAll();
     }
@@ -97,7 +98,7 @@ public class AppointmentRepository {
         );
     }
 
-    // ── Seed ───────────────────────────────────────────────────────────────
+    // ── Simulation de données (Seed) ───────────────────────────────────────
 
     private void seedIfEmpty() {
         if (doctorDao.getCount() > 0) return;
