@@ -19,6 +19,8 @@ import com.mobileproject.se77a.repository.UserRepository;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etNom, etEmail, etPassword, etConfirmPassword;
+    // Nouveaux champs ajoutés pour correspondre au Layout XML
+    private EditText etAge, etGroupeSanguin, etTaille, etPoids;
     private Button btnRegister;
     private TextView tvGoLogin;
 
@@ -33,10 +35,18 @@ public class RegisterActivity extends AppCompatActivity {
         // Initialisation de notre gestionnaire de données
         userRepository = new UserRepository(this);
 
+        // Liaison des vues initiales
         etNom = findViewById(R.id.etNom);
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         etConfirmPassword = findViewById(R.id.etConfirmPassword);
+
+        // Liaison des nouvelles vues du profil santé
+        etAge = findViewById(R.id.etAge);
+        etGroupeSanguin = findViewById(R.id.etGroupeSanguin);
+        etTaille = findViewById(R.id.etTaille);
+        etPoids = findViewById(R.id.etPoids);
+
         btnRegister = findViewById(R.id.btnRegister);
         tvGoLogin = findViewById(R.id.tvGoLogin);
 
@@ -46,8 +56,15 @@ public class RegisterActivity extends AppCompatActivity {
             String password = etPassword.getText().toString().trim();
             String confirm = etConfirmPassword.getText().toString().trim();
 
+            // Récupération des chaînes des nouveaux champs
+            String age = etAge.getText().toString().trim();
+            String groupeSanguin = etGroupeSanguin.getText().toString().trim();
+            String taille = etTaille.getText().toString().trim();
+            String poids = etPoids.getText().toString().trim();
+
+            // Vérification des champs obligatoires standards
             if (nom.isEmpty() || email.isEmpty() || password.isEmpty() || confirm.isEmpty()) {
-                Toast.makeText(this, "Remplissez tous les champs", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Remplissez tous les champs obligatoires", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -56,17 +73,44 @@ public class RegisterActivity extends AppCompatActivity {
                 return;
             }
 
-            // Création de l'objet utilisateur à partir des champs
+            // Création de l'objet utilisateur initial
             User nouvelUtilisateur = new User(nom, email, password);
+
+            // Injection des paramètres de santé optionnels dans l'objet User avant sauvegarde Room
+            if (!age.isEmpty()) {
+                try {
+                    nouvelUtilisateur.setAge(Integer.parseInt(age));
+                } catch (NumberFormatException e) {
+                    // Sécurité en cas de mauvaise saisie numérique
+                }
+            }
+            if (!groupeSanguin.isEmpty()) {
+                nouvelUtilisateur.setGroupeSanguin(groupeSanguin);
+            }
+            if (!taille.isEmpty()) {
+                try {
+                    nouvelUtilisateur.setTaille(Integer.parseInt(taille));
+                } catch (NumberFormatException e) { }
+            }
+            if (!poids.isEmpty()) {
+                try {
+                    nouvelUtilisateur.setPoids(Integer.parseInt(poids));
+                } catch (NumberFormatException e) { }
+            }
 
             // Envoi au repository pour vérification et sauvegarde Room
             boolean isSuccess = userRepository.registerUser(nouvelUtilisateur);
 
             if (isSuccess) {
-                // Sauvegarder le nom pour l'affichage dans FragmentHome
+                // Sauvegarde de l'intégralité des données utilisateur pour rafraîchir FragmentProfile
                 getSharedPreferences("user_prefs", MODE_PRIVATE)
                         .edit()
                         .putString("current_user_name", nom)
+                        .putString("email", email)
+                        .putString("age", age.isEmpty() ? "—" : age)
+                        .putString("groupe_sanguin", groupeSanguin.isEmpty() ? "—" : groupeSanguin)
+                        .putString("taille", taille.isEmpty() ? "—" : taille)
+                        .putString("poids", poids.isEmpty() ? "—" : poids)
                         .apply();
 
                 Toast.makeText(this, "Compte créé avec succès !", Toast.LENGTH_SHORT).show();
