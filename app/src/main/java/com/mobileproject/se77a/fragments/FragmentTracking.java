@@ -1,5 +1,5 @@
 package com.mobileproject.se77a.fragments;
-
+import com.mobileproject.se77a.adapters.AppointmentAdapter;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mobileproject.se77a.R;
-import com.mobileproject.se77a.adapters.AppointmentAdapter;
 import com.mobileproject.se77a.database.entities.Appointment;
 import com.mobileproject.se77a.database.entities.Medication;
 import com.mobileproject.se77a.repository.AppointmentRepository;
@@ -73,43 +72,58 @@ public class FragmentTracking extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvNextAppointments.setLayoutManager(layoutManager);
 
-        // Initialisation de l'adapter avec la boîte de dialogue (AlertDialog) pour les détails
+        // Initialisation de l'adapter avec la boîte de dialogue stylisée
         appointmentAdapter = new AppointmentAdapter(appt -> {
             if (getContext() == null) return;
 
-            // 1. Création de la boîte de dialogue
+            // 1. Gonfler le layout personnalisé que nous avons créé
+            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_appointment_details, null);
+
+            // 2. Lier les éléments graphiques du fichier XML personnalisé
+            TextView tvDocName   = dialogView.findViewById(R.id.dialog_doctor_name);
+            TextView tvSpecialty = dialogView.findViewById(R.id.dialog_specialty);
+            TextView tvDateTime  = dialogView.findViewById(R.id.dialog_date_time);
+            TextView tvAddress   = dialogView.findViewById(R.id.dialog_address);
+            TextView tvPhone     = dialogView.findViewById(R.id.dialog_phone);
+            CardView btnClose    = dialogView.findViewById(R.id.dialog_btn_close);
+            CardView btnCall     = dialogView.findViewById(R.id.dialog_btn_call);
+
+            // 3. Injecter dynamiquement les données du rendez-vous cliqué
+            if (tvDocName != null)   tvDocName.setText(appt.doctorName);
+            if (tvSpecialty != null) tvSpecialty.setText(appt.specialty);
+            if (tvDateTime != null)  tvDateTime.setText(appt.date + " à " + appt.time);
+            if (tvAddress != null)   tvAddress.setText(appt.address);
+            if (tvPhone != null)     tvPhone.setText(appt.phone);
+
+            // 4. Construire l'AlertDialog
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setView(dialogView);
 
-            // 2. Configuration du titre et de l'icône de la boîte
-            builder.setTitle("Détails du Rendez-vous");
-            builder.setIcon(R.drawable.ic_calendar);
-
-            // 3. Construction du message détaillé
-            String message = "👨‍⚕️ " + appt.doctorName + "\n" +
-                    "🧠 Spécialité : " + appt.specialty + "\n\n" +
-                    "📅 Date : " + appt.date + "\n" +
-                    "⏰ Heure : " + appt.time + "\n\n" +
-                    "📍 Adresse : " + appt.address + "\n" +
-                    "📞 Téléphone : " + appt.phone;
-
-            builder.setMessage(message);
-
-            // 4. Bouton Fermer
-            builder.setPositiveButton("Fermer", (dialog, which) -> dialog.dismiss());
-
-            // 5. Bouton Appeler le cabinet
-            builder.setNegativeButton("Appeler le cabinet", (dialog, which) -> {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + appt.phone));
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "Impossible de passer l'appel", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-            // 6. Affichage de la boîte à l'écran
             AlertDialog dialog = builder.create();
+
+            // Supprime l'arrière-plan système par défaut pour voir nos bords arrondis de CardView
+            if (dialog.getWindow() != null) {
+                dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            }
+
+            // 5. Gérer les actions au clic sur les nouveaux boutons stylisés
+            if (btnClose != null) {
+                btnClose.setOnClickListener(v -> dialog.dismiss());
+            }
+
+            if (btnCall != null) {
+                btnCall.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + appt.phone));
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Impossible de passer l'appel", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            // 6. Afficher le superbe dialogue à l'écran
             dialog.show();
         });
 

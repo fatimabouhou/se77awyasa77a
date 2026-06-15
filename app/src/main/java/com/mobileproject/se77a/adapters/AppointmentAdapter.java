@@ -1,5 +1,5 @@
 package com.mobileproject.se77a.adapters;
-
+import com.mobileproject.se77a.adapters.AppointmentAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
