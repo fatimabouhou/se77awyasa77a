@@ -28,4 +28,11 @@
         android:name="com.mobileproject.se77a.fragments.FragmentProfile"
         android:label="Profile"
         tools:layout="@layout/fragment_profile" />
+
+    <fragment
+        android:id="@+id/fragmentConfidentialite"
+        android:name="com.mobileproject.se77a.fragments.FragmentConfidentialite"
+        android:label="Confidentialité"
+        tools:layout="@layout/fragment_confidentialite" />
+
 </navigation>

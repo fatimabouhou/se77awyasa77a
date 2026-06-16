@@ -31,7 +31,18 @@ public interface AppointmentDao {
     // ── COMPTEURS SYNCHRONES POUR LE PROFIL ──
     @Query("SELECT COUNT(*) FROM appointments")
     int countAppointments();
-
+    @Query("DELETE FROM appointments")
+    void deleteAll();
     @Query("SELECT COUNT(*) FROM appointments WHERE id IS NOT NULL")
     int countOrdonnances();
+
+    // ── ÉTAPE 2 : LE PETIT SAC DE STOCKAGE ADAPTÉ À TES COLONNES ──
+    class MedicalPair {
+        public String specialty;   // Reçu depuis ton entité Appointment
+        public String doctorName;  // Reçu depuis ton entité Appointment
+    }
+
+    // ── ÉTAPE 3 : LA REQUÊTE MAGIQUE UNIQUE PAR SPÉCIALITÉ ──
+    @Query("SELECT DISTINCT specialty, doctorName FROM appointments WHERE specialty IS NOT NULL AND specialty != ''")
+    List<MedicalPair> getAllDiseasesWithDoctors();
 }
