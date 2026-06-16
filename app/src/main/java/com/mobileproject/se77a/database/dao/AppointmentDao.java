@@ -45,4 +45,7 @@ public interface AppointmentDao {
     // ── ÉTAPE 3 : LA REQUÊTE MAGIQUE UNIQUE PAR SPÉCIALITÉ ──
     @Query("SELECT DISTINCT specialty, doctorName FROM appointments WHERE specialty IS NOT NULL AND specialty != ''")
     List<MedicalPair> getAllDiseasesWithDoctors();
+
+    @Query("SELECT COUNT(*) FROM appointments WHERE date LIKE :monthPrefix || '%' AND status = 'UPCOMING'")
+    LiveData<Integer> getCountForMonth(String monthPrefix);
 }

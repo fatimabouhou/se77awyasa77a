@@ -375,11 +375,11 @@ public class FragmentTracking extends Fragment {
     }
 
     private void showHistory() {
-        Toast.makeText(getContext(),
-                "📜 Historique des consultations:\n\n• 10/05/2026 - Dr. Benali (Cardio)\n• 25/04/2026 - Dr. Fathi (Généraliste)",
-                Toast.LENGTH_LONG).show();
+        if (appointmentRepository != null) {
+            HistoryBottomSheet sheet = new HistoryBottomSheet(appointmentRepository);
+            sheet.show(getParentFragmentManager(), "history");
+        }
     }
-
     private void showNotifications() {
         Toast.makeText(getContext(), "🔔 Notifications activées\nRappel: Prendre vos médicaments dans 1h", Toast.LENGTH_SHORT).show();
     }
