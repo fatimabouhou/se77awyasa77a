@@ -14,7 +14,7 @@ import java.util.List;
 public interface DoctorDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertAll(List<Doctor> doctors);
+    List<Long> insertAll(List<Doctor> doctors); // ← retourne les vrais IDs
 
     @Query("SELECT * FROM doctors ORDER BY specialty, name")
     LiveData<List<Doctor>> getAllDoctors();

@@ -1,5 +1,7 @@
 package com.mobileproject.se77a.fragments;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -32,8 +34,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -48,10 +48,8 @@ import com.mobileproject.se77a.viewmodels.MedicationViewModel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 
 public class FragmentMedications extends Fragment
         implements MedicationAdapter.OnMedicationClickListener {
@@ -101,10 +99,6 @@ public class FragmentMedications extends Fragment
         } else {
             checkExactAlarmPermission();
         }
-    }
-
-    private void checkNotificationPermission() {
-        // Method now empty as logic moved to onViewCreated for better flow
     }
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -211,10 +205,12 @@ public class FragmentMedications extends Fragment
     }
 
     @Override public void onMedicationClick(Medication medication) {}
+
     @Override public void onToggleActive(Medication medication, boolean isActive) {
         medication.isActive = isActive;
         viewModel.update(medication);
     }
+
     @Override public void onMarkTaken(Medication medication) {
         if (medication.reminderTime == null || medication.reminderTime.isEmpty()) {
             medication.takenToday = true;
@@ -245,16 +241,17 @@ public class FragmentMedications extends Fragment
         if (!doseToMark.isEmpty()) {
             String newTaken = currentTaken.isEmpty() ? doseToMark : currentTaken + "," + doseToMark;
             medication.takenTimes = newTaken;
-            
+
             // Check if all doses for the day are now taken
             if (newTaken.split(",").length >= allTimes.length) {
                 medication.takenToday = true;
             }
-            
+
             viewModel.update(medication);
             Toast.makeText(getContext(), medication.name + " (" + doseToMark + ") marqué pris ✓", Toast.LENGTH_SHORT).show();
         }
     }
+
     @Override public void onDeleteMedication(Medication medication) {
         viewModel.delete(medication);
         Toast.makeText(getContext(), medication.name + " supprimé", Toast.LENGTH_SHORT).show();
@@ -275,7 +272,11 @@ public class FragmentMedications extends Fragment
         // Expand BottomSheet fully
         sheet.setOnShowListener(dialog -> {
             BottomSheetDialog d = (BottomSheetDialog) dialog;
-            View bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+
+            // Résolution dynamique sécurisée de l'ID interne design_bottom_sheet
+            int bottomSheetId = requireContext().getResources().getIdentifier("design_bottom_sheet", "id", requireContext().getPackageName());
+            View bottomSheet = d.findViewById(bottomSheetId);
+
             if (bottomSheet != null) {
                 BottomSheetBehavior.from(bottomSheet).setState(BottomSheetBehavior.STATE_EXPANDED);
             }

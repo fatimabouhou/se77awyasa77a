@@ -1,9 +1,9 @@
 package com.mobileproject.se77a.fragments;
+
 import com.mobileproject.se77a.adapters.AppointmentAdapter;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,10 +76,8 @@ public class FragmentTracking extends Fragment {
         appointmentAdapter = new AppointmentAdapter(appt -> {
             if (getContext() == null) return;
 
-            // 1. Gonfler le layout personnalisé que nous avons créé
             View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_appointment_details, null);
 
-            // 2. Lier les éléments graphiques du fichier XML personnalisé
             TextView tvDocName   = dialogView.findViewById(R.id.dialog_doctor_name);
             TextView tvSpecialty = dialogView.findViewById(R.id.dialog_specialty);
             TextView tvDateTime  = dialogView.findViewById(R.id.dialog_date_time);
@@ -88,25 +86,21 @@ public class FragmentTracking extends Fragment {
             CardView btnClose    = dialogView.findViewById(R.id.dialog_btn_close);
             CardView btnCall     = dialogView.findViewById(R.id.dialog_btn_call);
 
-            // 3. Injecter dynamiquement les données du rendez-vous cliqué
             if (tvDocName != null)   tvDocName.setText(appt.doctorName);
             if (tvSpecialty != null) tvSpecialty.setText(appt.specialty);
             if (tvDateTime != null)  tvDateTime.setText(appt.date + " à " + appt.time);
             if (tvAddress != null)   tvAddress.setText(appt.address);
             if (tvPhone != null)     tvPhone.setText(appt.phone);
 
-            // 4. Construire l'AlertDialog
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setView(dialogView);
 
             AlertDialog dialog = builder.create();
 
-            // Supprime l'arrière-plan système par défaut pour voir nos bords arrondis de CardView
             if (dialog.getWindow() != null) {
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
             }
 
-            // 5. Gérer les actions au clic sur les nouveaux boutons stylisés
             if (btnClose != null) {
                 btnClose.setOnClickListener(v -> dialog.dismiss());
             }
@@ -123,13 +117,11 @@ public class FragmentTracking extends Fragment {
                 });
             }
 
-            // 6. Afficher le superbe dialogue à l'écran
             dialog.show();
         });
 
         rvNextAppointments.setAdapter(appointmentAdapter);
 
-        // Ajout du SnapHelper pour l'effet de swiper fluide (aimantage carte par carte)
         PagerSnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(rvNextAppointments);
 
@@ -162,7 +154,6 @@ public class FragmentTracking extends Fragment {
     private void loadData() {
         if (getActivity() == null) return;
 
-        // ── RDV : Récupération de TOUS les rendez-vous actifs ───────────────
         appointmentRepository = new AppointmentRepository(getActivity().getApplication());
         appointmentRepository.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
             if (appointments == null || appointments.isEmpty()) {
@@ -173,7 +164,6 @@ public class FragmentTracking extends Fragment {
             }
         });
 
-        // ── Médicaments ────────────────────────────────────────────────────
         medicationRepository = new MedicationRepository(getActivity().getApplication());
         medicationRepository.resetIfNewDay();
         medicationRepository.getAllMedications().observe(getViewLifecycleOwner(), medications -> {
@@ -262,7 +252,7 @@ public class FragmentTracking extends Fragment {
     private void setupClickListeners() {
         if (cardAppointment   != null) cardAppointment.setOnClickListener(v -> takeAppointment());
         if (cardMap           != null) cardMap.setOnClickListener(v -> openMaps());
-        if (cardPrescription  != null) cardPrescription.setOnClickListener(v -> takePrescriptionPhoto());
+        if (cardPrescription  != null) cardPrescription.setOnClickListener(v -> openPrescriptionFragment()); // ← CORRIGÉ
         if (cardResults       != null) cardResults.setOnClickListener(v -> takeAnalysisPhoto());
         if (cardMedications   != null) cardMedications.setOnClickListener(v -> medicationReminders());
         if (cardCall          != null) cardCall.setOnClickListener(v -> callCabinet());
@@ -346,21 +336,22 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void takePrescriptionPhoto() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée", Toast.LENGTH_SHORT).show();
+    // ── CORRECTION : navigation vers FragmentPrescription au lieu de lancer la caméra directement ──
+    private void openPrescriptionFragment() {
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new FragmentPrescription())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
     private void takeAnalysisPhoto() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        try {
             startActivity(intent);
             Toast.makeText(getContext(), "📸 Prenez en photo vos résultats d'analyses", Toast.LENGTH_SHORT).show();
-        } else {
+        } catch (Exception e) {
             Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée", Toast.LENGTH_SHORT).show();
         }
     }

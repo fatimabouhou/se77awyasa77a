@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!--
+        Donne accès au dossier Pictures de l'application externe.
+        Correspond à getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        utilisé dans createImageFile() de FragmentPrescription.
+    -->
+    <external-files-path
+        name="my_images"
+        path="Pictures/"/>
+</paths>
