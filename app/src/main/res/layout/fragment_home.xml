@@ -212,13 +212,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
 
-        <!-- Graphique des visites -->
-        <FrameLayout
-            android:id="@+id/chart_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
         <!-- ===== ALERTES DU JOUR ===== -->
         <TextView
             android:layout_width="wrap_content"

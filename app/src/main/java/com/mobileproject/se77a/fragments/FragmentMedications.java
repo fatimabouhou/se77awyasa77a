@@ -42,6 +42,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.mobileproject.se77a.R;
 import com.mobileproject.se77a.adapters.MedicationAdapter;
 import com.mobileproject.se77a.database.entities.Medication;
+import com.mobileproject.se77a.utils.NotificationHelper;
 import com.mobileproject.se77a.utils.TimeUtils;
 import com.mobileproject.se77a.viewmodels.MedicationViewModel;
 
@@ -212,6 +213,10 @@ public class FragmentMedications extends Fragment
     }
 
     @Override public void onMarkTaken(Medication medication) {
+        // Arrêter la notification si elle est active
+        NotificationHelper notificationHelper = new NotificationHelper(requireContext());
+        notificationHelper.cancelNotification(medication.id);
+
         if (medication.reminderTime == null || medication.reminderTime.isEmpty()) {
             medication.takenToday = true;
             viewModel.update(medication);

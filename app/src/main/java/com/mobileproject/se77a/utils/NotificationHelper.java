@@ -81,38 +81,56 @@ public class NotificationHelper extends ContextWrapper {
 
     public void showMedicationNotification(int medId, String medName, String dosage) {
         Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("navigate_to", "medications");
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this, medId, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Action "Marquer comme pris" directement depuis la notification
+        Intent takenIntent = new Intent(this, com.mobileproject.se77a.receivers.MedicationActionReceiver.class);
+        takenIntent.setAction("ACTION_MARK_TAKEN");
+        takenIntent.putExtra("med_id", medId);
+        takenIntent.putExtra("med_name", medName);
+        
+        PendingIntent takenPendingIntent = PendingIntent.getBroadcast(
+                this, medId + 2000, takenIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_MEDICATIONS_ID)
                 .setSmallIcon(R.drawable.ic_medication)
                 .setContentTitle("🚨 ALERTE MÉDICAMENT")
-                .setContentText("C'est l'heure de votre traitement : " + medName + " (" + dosage + ")")
+                .setContentText("C'est l'heure de : " + medName + " (" + dosage + ")")
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
                 .setSound(alarmSound)
-                // Rend la notification persistante et plein écran si possible
                 .setFullScreenIntent(pendingIntent, true)
                 .setAutoCancel(true)
+                .addAction(R.drawable.ic_check, "MARQUER COMME PRIS", takenPendingIntent)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .setContentIntent(pendingIntent);
 
         Notification notification = builder.build();
-        
-        // FLAG_INSISTENT fait sonner la notification en boucle jusqu'à interaction
         notification.flags |= Notification.FLAG_INSISTENT;
 
         getManager().notify(medId, notification);
     }
 
+    public void cancelNotification(int id) {
+        getManager().cancel(id);
+    }
+
     public void showAppointmentNotification(int apptId, String doctorName, String time) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("navigate_to", "tracking");
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, apptId + 1000, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_APPOINTMENTS_ID)
                 .setSmallIcon(R.drawable.ic_calendar)
                 .setContentTitle("📅 Rappel Rendez-vous")
                 .setContentText("Rendez-vous avec " + doctorName + " à " + time)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         getManager().notify(apptId + 1000, builder.build());
