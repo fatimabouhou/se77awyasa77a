@@ -346,13 +346,13 @@ public class FragmentTracking extends Fragment {
         }
     }
 
+    // APRÈS (correct)
     private void takeAnalysisPhoto() {
-        Intent intent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        try {
-            startActivity(intent);
-            Toast.makeText(getContext(), "📸 Prenez en photo vos résultats d'analyses", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "📸 Aucune application appareil photo trouvée", Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.nav_host_fragment, new FragmentAnalysis())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
