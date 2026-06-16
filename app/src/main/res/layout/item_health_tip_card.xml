@@ -37,7 +37,7 @@
                 android:textSize="10sp"
                 android:textStyle="bold"
                 android:textColor="@color/blue_dark_1"
-                android:background="@drawable/bg_badge_light"
+                android:background="#F0F7FF"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="4dp"
                 android:layout_marginBottom="12dp"
@@ -59,7 +59,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:background="@drawable/bg_badge_light"
+
                 android:backgroundTint="#F0F7FF"
                 android:padding="12dp"
                 android:gravity="center_vertical"

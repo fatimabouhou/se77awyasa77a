@@ -34,7 +34,7 @@ import java.util.List;
 
 public class FragmentTracking extends Fragment {
 
-    // ── Section 1 : Rendez-vous (Carrousel Horizontal) ──────────────────────
+    // ── Section 1 : Rendez-vous ────────────────────────────────────────────
     private RecyclerView       rvNextAppointments;
     private AppointmentAdapter appointmentAdapter;
 
@@ -49,9 +49,9 @@ public class FragmentTracking extends Fragment {
     private AppointmentRepository appointmentRepository;
     private List<Medication>      activeMedicationsList = new ArrayList<>();
 
-    // ── Section 3 : Grille 8 services ─────────────────────────────────────
+    // ── Section 3 : Grille 6 services ─────────────────────────────────────
     private CardView cardAppointment, cardMap, cardPrescription, cardResults;
-    private CardView cardMedications, cardCall, cardHistory, cardNotifications;
+    private CardView cardCall, cardHistory;
 
     @Nullable
     @Override
@@ -67,16 +67,17 @@ public class FragmentTracking extends Fragment {
 
     // ── Initialisation des vues ────────────────────────────────────────────
     private void initViews(View view) {
-        // Configuration du Recycler View Horizontal pour les RDV
+        // RecyclerView horizontal RDV
         rvNextAppointments = view.findViewById(R.id.rv_next_appointments);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(
+                getContext(), LinearLayoutManager.HORIZONTAL, false);
         rvNextAppointments.setLayoutManager(layoutManager);
 
-        // Initialisation de l'adapter avec la boîte de dialogue stylisée
         appointmentAdapter = new AppointmentAdapter(appt -> {
             if (getContext() == null) return;
 
-            View dialogView = LayoutInflater.from(getContext()).inflate(R.layout.dialog_appointment_details, null);
+            View dialogView = LayoutInflater.from(getContext())
+                    .inflate(R.layout.dialog_appointment_details, null);
 
             TextView tvDocName   = dialogView.findViewById(R.id.dialog_doctor_name);
             TextView tvSpecialty = dialogView.findViewById(R.id.dialog_specialty);
@@ -94,17 +95,12 @@ public class FragmentTracking extends Fragment {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setView(dialogView);
-
             AlertDialog dialog = builder.create();
 
-            if (dialog.getWindow() != null) {
+            if (dialog.getWindow() != null)
                 dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-            }
 
-            if (btnClose != null) {
-                btnClose.setOnClickListener(v -> dialog.dismiss());
-            }
-
+            if (btnClose != null) btnClose.setOnClickListener(v -> dialog.dismiss());
             if (btnCall != null) {
                 btnCall.setOnClickListener(v -> {
                     try {
@@ -112,7 +108,8 @@ public class FragmentTracking extends Fragment {
                         intent.setData(Uri.parse("tel:" + appt.phone));
                         startActivity(intent);
                     } catch (Exception e) {
-                        Toast.makeText(getContext(), "Impossible de passer l'appel", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(),
+                                "Impossible de passer l'appel", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -139,15 +136,13 @@ public class FragmentTracking extends Fragment {
         tvNoonTime    = view.findViewById(R.id.tv_noon_time);
         tvEveningTime = view.findViewById(R.id.tv_evening_time);
 
-        // Vues Grille de services
-        cardAppointment   = view.findViewById(R.id.card_appointment);
-        cardMap           = view.findViewById(R.id.card_map);
-        cardPrescription  = view.findViewById(R.id.card_prescription);
-        cardResults       = view.findViewById(R.id.card_results);
-        cardMedications   = view.findViewById(R.id.card_medications);
-        cardCall          = view.findViewById(R.id.card_call);
-        cardHistory       = view.findViewById(R.id.card_history);
-        cardNotifications = view.findViewById(R.id.card_notifications);
+        // Vues Grille 6 services
+        cardAppointment  = view.findViewById(R.id.card_appointment);
+        cardMap          = view.findViewById(R.id.card_map);
+        cardPrescription = view.findViewById(R.id.card_prescription);
+        cardResults      = view.findViewById(R.id.card_results);
+        cardCall         = view.findViewById(R.id.card_call);
+        cardHistory      = view.findViewById(R.id.card_history);
     }
 
     // ── Chargement des données ─────────────────────────────────────────────
@@ -201,16 +196,13 @@ public class FragmentTracking extends Fragment {
 
                 if (hour < 12) {
                     matinTotal++;
-                    if (pris)  matinPris++;
-                    else       morningPending.add(time);
+                    if (pris) matinPris++; else morningPending.add(time);
                 } else if (hour < 18) {
                     midiTotal++;
-                    if (pris)  midiPris++;
-                    else       noonPending.add(time);
+                    if (pris) midiPris++;  else noonPending.add(time);
                 } else {
                     soirTotal++;
-                    if (pris)  soirPris++;
-                    else       eveningPending.add(time);
+                    if (pris) soirPris++;  else eveningPending.add(time);
                 }
             }
         }
@@ -224,8 +216,8 @@ public class FragmentTracking extends Fragment {
         String firstEvening = eveningPending.isEmpty() ? "" : eveningPending.get(0);
 
         updateSlotUI(viewMorningIndicator, tvMorningTime, cardMorning, matinTotal, matinPris, firstMorning);
-        updateSlotUI(viewNoonIndicator, tvNoonTime, cardNoon, midiTotal, midiPris, firstNoon);
-        updateSlotUI(viewEveningIndicator, tvEveningTime, cardEvening, soirTotal, soirPris, firstEvening);
+        updateSlotUI(viewNoonIndicator,    tvNoonTime,    cardNoon,    midiTotal,  midiPris,  firstNoon);
+        updateSlotUI(viewEveningIndicator, tvEveningTime, cardEvening, soirTotal,  soirPris,  firstEvening);
 
         if (progressMedication != null) {
             int percent = (totalDoses == 0) ? 0 : (takenDoses * 100) / totalDoses;
@@ -233,31 +225,27 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void updateSlotUI(View indicator, TextView timeView, LinearLayout card, int total, int pris, String firstTime) {
-        boolean hasDoses = total > 0;
-        boolean allTaken = hasDoses && (pris == total);
+    private void updateSlotUI(View indicator, TextView timeView, LinearLayout card,
+                              int total, int pris, String firstTime) {
+        boolean allTaken = total > 0 && (pris == total);
 
-        if (indicator != null) {
-            indicator.setBackgroundResource(allTaken ? R.drawable.bg_med_checked : R.drawable.bg_med_pending);
-        }
-        if (timeView != null) {
+        if (indicator != null)
+            indicator.setBackgroundResource(allTaken
+                    ? R.drawable.bg_med_checked : R.drawable.bg_med_pending);
+        if (timeView != null)
             timeView.setText(!firstTime.isEmpty() ? firstTime : "--:--");
-        }
-        if (card != null) {
+        if (card != null)
             card.setAlpha(allTaken ? 0.5f : 1.0f);
-        }
     }
 
     // ── Gestionnaire des clics ─────────────────────────────────────────────
     private void setupClickListeners() {
-        if (cardAppointment   != null) cardAppointment.setOnClickListener(v -> takeAppointment());
-        if (cardMap           != null) cardMap.setOnClickListener(v -> openMaps());
-        if (cardPrescription  != null) cardPrescription.setOnClickListener(v -> openPrescriptionFragment()); // ← CORRIGÉ
-        if (cardResults       != null) cardResults.setOnClickListener(v -> takeAnalysisPhoto());
-        if (cardMedications   != null) cardMedications.setOnClickListener(v -> medicationReminders());
-        if (cardCall          != null) cardCall.setOnClickListener(v -> callCabinet());
-        if (cardHistory       != null) cardHistory.setOnClickListener(v -> showHistory());
-        if (cardNotifications != null) cardNotifications.setOnClickListener(v -> showNotifications());
+        if (cardAppointment  != null) cardAppointment.setOnClickListener(v -> takeAppointment());
+        if (cardMap          != null) cardMap.setOnClickListener(v -> openMaps());
+        if (cardPrescription != null) cardPrescription.setOnClickListener(v -> openPrescriptionFragment());
+        if (cardResults      != null) cardResults.setOnClickListener(v -> takeAnalysisPhoto());
+        if (cardCall         != null) cardCall.setOnClickListener(v -> callCabinet());
+        if (cardHistory      != null) cardHistory.setOnClickListener(v -> showHistory());
 
         if (cardMorning != null) cardMorning.setOnClickListener(v -> markMedicationTaken("Matin"));
         if (cardNoon    != null) cardNoon.setOnClickListener(v -> markMedicationTaken("Midi"));
@@ -285,15 +273,16 @@ public class FragmentTracking extends Fragment {
                                 (slot.equals("Soir")  && hour >= 18);
 
                 if (correspondAuSlot && !takenList.contains(time)) {
-                    // Arrêter la notification si elle est active
-                    new com.mobileproject.se77a.utils.NotificationHelper(getContext()).cancelNotification(med.id);
+                    new com.mobileproject.se77a.utils.NotificationHelper(getContext())
+                            .cancelNotification(med.id);
 
                     takenList.add(time);
                     String newTakenTimes = String.join(",", takenList);
                     boolean toutPris = takenList.containsAll(Arrays.asList(scheduledTimes));
 
                     medicationRepository.updateTakenTimes(med.id, newTakenTimes, toutPris);
-                    Toast.makeText(getContext(), med.name + " · " + time + " ✓", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),
+                            med.name + " · " + time + " ✓", Toast.LENGTH_SHORT).show();
                     doseTrouvee = true;
                     break;
                 }
@@ -302,7 +291,9 @@ public class FragmentTracking extends Fragment {
         }
 
         if (!doseTrouvee) {
-            Toast.makeText(getContext(), "Toutes les doses du " + slot + " sont déjà prises ✓", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),
+                    "Toutes les doses du " + slot + " sont déjà prises ✓",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -322,7 +313,7 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    // ── 8 services actions ──────────────────────────────────────────────────
+    // ── Actions des 6 services ─────────────────────────────────────────────
     private void takeAppointment() {
         if (appointmentRepository != null) {
             AppointmentBottomSheet sheet = new AppointmentBottomSheet(appointmentRepository);
@@ -339,7 +330,6 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    // ── CORRECTION : navigation vers FragmentPrescription au lieu de lancer la caméra directement ──
     private void openPrescriptionFragment() {
         if (getActivity() != null) {
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -349,7 +339,6 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    // APRÈS (correct)
     private void takeAnalysisPhoto() {
         if (getActivity() != null) {
             getActivity().getSupportFragmentManager().beginTransaction()
@@ -359,14 +348,11 @@ public class FragmentTracking extends Fragment {
         }
     }
 
-    private void medicationReminders() {
-        Toast.makeText(getContext(), "💊 Paramètres des rappels médicaments", Toast.LENGTH_LONG).show();
-    }
-
     private void callCabinet() {
         if (appointmentRepository == null) return;
         appointmentRepository.getAllAppointments().observe(getViewLifecycleOwner(), appointments -> {
-            String phone = (appointments != null && !appointments.isEmpty() && appointments.get(0).phone != null)
+            String phone = (appointments != null && !appointments.isEmpty()
+                    && appointments.get(0).phone != null)
                     ? appointments.get(0).phone : "0512345678";
             Intent intent = new Intent(Intent.ACTION_DIAL);
             intent.setData(Uri.parse("tel:" + phone));
@@ -379,8 +365,5 @@ public class FragmentTracking extends Fragment {
             HistoryBottomSheet sheet = new HistoryBottomSheet(appointmentRepository);
             sheet.show(getParentFragmentManager(), "history");
         }
-    }
-    private void showNotifications() {
-        Toast.makeText(getContext(), "🔔 Notifications activées\nRappel: Prendre vos médicaments dans 1h", Toast.LENGTH_SHORT).show();
     }
 }

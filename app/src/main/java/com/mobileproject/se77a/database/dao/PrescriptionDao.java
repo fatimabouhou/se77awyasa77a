@@ -22,4 +22,7 @@ public interface PrescriptionDao {
 
     @Query("SELECT * FROM prescriptions WHERE appointmentId = :appointmentId")
     LiveData<List<Prescription>> getPrescriptionsByAppointment(int appointmentId);
+
+    @Query("SELECT COUNT(*) FROM prescriptions")   // ← NOUVEAU
+    LiveData<Integer> getCount();
 }
