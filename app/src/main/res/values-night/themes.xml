@@ -1,7 +1,12 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme pour la NUIT -->
     <style name="Base.Theme.Se77a" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- On demande à Material 3 de forcer les teintes sombres par défaut -->
+        <item name="colorSurface">#121212</item>         <!-- Fond de l'écran en noir -->
+        <item name="colorSurfaceVariant">#1E1E1E</item>  <!-- Fond des cartes en gris foncé -->
+        <item name="colorOnSurface">#FFFFFF</item>       <!-- Les textes deviennent blancs -->
     </style>
+
+    <style name="Theme.Se77a" parent="Base.Theme.Se77a" />
 </resources>

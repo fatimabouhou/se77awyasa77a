@@ -37,7 +37,8 @@ public interface MedicationDao {
     // Marque un médicament comme entièrement pris (toutes ses doses)
     @Query("UPDATE medications SET takenToday = 1, takenTimes = reminderTime WHERE id = :id")
     void markAsTakenFull(int id);
-
+    @Query("DELETE FROM medications")
+    void deleteAll();
     // Mise à jour dose par dose (depuis FragmentTracking)
     @Query("UPDATE medications SET takenTimes = :takenTimes, takenToday = :takenToday WHERE id = :id")
     void updateTakenTimes(int id, String takenTimes, boolean takenToday);

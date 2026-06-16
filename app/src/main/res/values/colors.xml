@@ -8,6 +8,11 @@
     <color name="blue_light_1">#97CADB</color>
     <color name="blue_light_2">#D6E8EE</color>
 
+
+    <color name="permission_granted">#2E7D32</color>
+    <color name="permission_denied">#E24B4A</color>
+
+
     <color name="gray_text">#6A7B95</color>
 
     <!-- Fond de page -->
