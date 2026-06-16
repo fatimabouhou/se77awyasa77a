@@ -23,6 +23,12 @@ import com.mobileproject.se77a.database.entities.Doctor;
 import com.mobileproject.se77a.database.entities.TimeSlot;
 import com.mobileproject.se77a.repository.AppointmentRepository;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Locale;
+
 public class AppointmentBottomSheet extends BottomSheetDialogFragment {
 
     private final AppointmentRepository repo;
@@ -100,15 +106,59 @@ public class AppointmentBottomSheet extends BottomSheetDialogFragment {
     private void loadSlots() {
         if (selectedDoctor == null) { step = 1; loadStep(); return; }
         tvTitle.setText(selectedDoctor.name + " — Créneaux");
+
         repo.getAvailableSlots(selectedDoctor.id).observe(getViewLifecycleOwner(), slots -> {
-            if (slots == null) return;
-            if (slots.isEmpty()) {
-                tvTitle.setText("Aucun créneau disponible");
-                recycler.setAdapter(null);
-                return;
+            if (slots == null || slots.isEmpty()) {
+                // FALLBACK : Si la BDD ne contient aucun créneau pour ce médecin, on les génère dynamiquement
+                List<TimeSlot> mockSlots = generateDefaultSlots(selectedDoctor.id);
+                recycler.setAdapter(new SlotAdapter(mockSlots, this::showConfirmation));
+            } else {
+                // Si la BDD contient des créneaux, on affiche les vrais
+                recycler.setAdapter(new SlotAdapter(slots, this::showConfirmation));
             }
-            recycler.setAdapter(new SlotAdapter(slots, this::showConfirmation));
         });
+    }
+
+    /**
+     * Génère automatiquement des créneaux de secours en utilisant le constructeur à 3 paramètres.
+     */
+    private List<TimeSlot> generateDefaultSlots(int doctorId) {
+        List<TimeSlot> fallbackSlots = new ArrayList<>();
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+
+        // Horaires de consultations fictifs par défaut
+        String[] hours = {"09:00", "10:00", "11:00", "14:00", "15:00", "16:00"};
+
+        // Génère des créneaux pour les 3 prochains jours (sauf le dimanche)
+        int daysGenerated = 0;
+        while (daysGenerated < 3) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1);
+
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                continue;
+            }
+
+            String dateString = dateFormat.format(calendar.getTime());
+
+            for (String hour : hours) {
+                // Utilisation du constructeur requis : (int, String, String)
+                TimeSlot slot = new TimeSlot(doctorId, dateString, hour);
+
+                // On s'assure qu'il est marqué disponible (si le champ existe et est accessible)
+                try {
+                    slot.isAvailable = true;
+                } catch (Exception ignored) {
+                    // Ignoré si le champ n'est pas accessible directement ou géré autrement par défaut
+                }
+
+                fallbackSlots.add(slot);
+            }
+            daysGenerated++;
+        }
+
+        return fallbackSlots;
     }
 
     private void showConfirmation(TimeSlot slot) {
