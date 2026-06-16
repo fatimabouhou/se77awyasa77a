@@ -10,7 +10,11 @@
         android:name="com.mobileproject.se77a.fragments.FragmentHome"
         android:label="Home"
         tools:layout="@layout/fragment_home" />
-
+    <fragment
+        android:id="@+id/fragmentPrescription"
+        android:name="com.mobileproject.se77a.fragments.FragmentPrescription"
+        android:label="Prescription"
+        tools:layout="@layout/fragment_prescription" />
     <fragment
         android:id="@+id/fragmentTracking"
         android:name="com.mobileproject.se77a.fragments.FragmentTracking"

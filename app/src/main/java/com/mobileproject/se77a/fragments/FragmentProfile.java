@@ -77,8 +77,10 @@ public class FragmentProfile extends Fragment {
         btnSettings.setOnClickListener(v ->
                 Toast.makeText(getContext(), "Paramètres", Toast.LENGTH_SHORT).show());
 
+        // ── Ordonnances → FragmentPrescription ────────────────────────────
         itemOrdonnances.setOnClickListener(v ->
-                Toast.makeText(getContext(), "Mes Ordonnances", Toast.LENGTH_SHORT).show());
+                Navigation.findNavController(requireView())
+                        .navigate(R.id.fragmentPrescription));
 
         itemConfidentialite.setOnClickListener(v ->
                 Navigation.findNavController(requireView())
@@ -145,8 +147,8 @@ public class FragmentProfile extends Fragment {
     }
 
     private void ajouterLigneMedicaleDynamique(String titreSpecialite, String nomDocteur) {
-        float dp = getResources().getDisplayMetrics().density;
-        int padding = (int) (14 * dp);
+        float dp      = getResources().getDisplayMetrics().density;
+        int padding   = (int) (14 * dp);
 
         RelativeLayout row = new RelativeLayout(requireContext());
         row.setPadding(padding, padding, padding, padding);
